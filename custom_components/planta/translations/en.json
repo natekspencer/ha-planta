@@ -36,10 +36,18 @@
   },
   "entity": {
     "button": {
-      "complete_cleaning": { "name": "Complete cleaning" },
-      "complete_fertilizing": { "name": "Complete fertilizing" },
-      "complete_misting": { "name": "Complete misting" },
-      "complete_watering": { "name": "Complete watering" }
+      "complete_cleaning": {
+        "name": "Complete cleaning"
+      },
+      "complete_fertilizing": {
+        "name": "Complete fertilizing"
+      },
+      "complete_misting": {
+        "name": "Complete misting"
+      },
+      "complete_watering": {
+        "name": "Complete watering"
+      }
     },
     "sensor": {
       "growing_medium": {
@@ -79,16 +87,30 @@
           "notset": "Unknown",
           "poor": "Poor",
           "sick": "Sick",
-          "verygood": "Very good"
+          "veryGood": "Very good"
         }
       },
-      "last_cleaning": { "name": "Last cleaning" },
-      "last_fertilizing": { "name": "Last fertilizing" },
-      "last_misting": { "name": "Last misting" },
-      "last_progress_update": { "name": "Last progress update" },
-      "last_repotting": { "name": "Last repotting" },
-      "last_watering": { "name": "Last watering" },
-      "pot_size": { "name": "Pot size" },
+      "last_cleaning": {
+        "name": "Last cleaning"
+      },
+      "last_fertilizing": {
+        "name": "Last fertilizing"
+      },
+      "last_misting": {
+        "name": "Last misting"
+      },
+      "last_progress_update": {
+        "name": "Last progress update"
+      },
+      "last_repotting": {
+        "name": "Last repotting"
+      },
+      "last_watering": {
+        "name": "Last watering"
+      },
+      "pot_size": {
+        "name": "Pot size"
+      },
       "pot_type": {
         "name": "Pot type",
         "state": {
@@ -110,21 +132,45 @@
           "windowbox": "Window box"
         }
       },
-      "scheduled_cleaning": { "name": "Scheduled cleaning" },
-      "scheduled_fertilizing": { "name": "Scheduled fertilizing" },
-      "scheduled_misting": { "name": "Scheduled misting" },
-      "scheduled_progress_update": { "name": "Scheduled progress update" },
-      "scheduled_repotting": { "name": "Scheduled repotting" },
-      "scheduled_watering": { "name": "Scheduled watering" },
-      "size": { "name": "Size" },
-      "time_since_last_cleaning": { "name": "Time since last cleaning" },
-      "time_since_last_fertilizing": { "name": "Time since last fertilizing" },
-      "time_since_last_misting": { "name": "Time since last misting" },
+      "scheduled_cleaning": {
+        "name": "Scheduled cleaning"
+      },
+      "scheduled_fertilizing": {
+        "name": "Scheduled fertilizing"
+      },
+      "scheduled_misting": {
+        "name": "Scheduled misting"
+      },
+      "scheduled_progress_update": {
+        "name": "Scheduled progress update"
+      },
+      "scheduled_repotting": {
+        "name": "Scheduled repotting"
+      },
+      "scheduled_watering": {
+        "name": "Scheduled watering"
+      },
+      "size": {
+        "name": "Size"
+      },
+      "time_since_last_cleaning": {
+        "name": "Time since last cleaning"
+      },
+      "time_since_last_fertilizing": {
+        "name": "Time since last fertilizing"
+      },
+      "time_since_last_misting": {
+        "name": "Time since last misting"
+      },
       "time_since_last_progress_update": {
         "name": "Time since last progress update"
       },
-      "time_since_last_repotting": { "name": "Time since last repotting" },
-      "time_since_last_watering": { "name": "Time since last watering" }
+      "time_since_last_repotting": {
+        "name": "Time since last repotting"
+      },
+      "time_since_last_watering": {
+        "name": "Time since last watering"
+      }
     }
   }
 }

@@ -26,7 +26,16 @@ from .entity import PlantaEntity
 
 _LOGGER = logging.getLogger(__name__)
 
-PLANT_HEALTH_LIST = ["notset", "poor", "fair", "good", "verygood", "excellent"]
+PLANT_HEALTH_LIST = [
+    "notset",
+    "poor",
+    "fair",
+    "sick",
+    "good",
+    "bad",
+    "veryGood",
+    "excellent",
+]
 
 
 def get_last_watering_completed(
