@@ -79,7 +79,7 @@
           "notset": "Unknown",
           "poor": "Poor",
           "sick": "Sick",
-          "veryGood": "Very good"
+          "verygood": "Very good"
         }
       },
       "last_cleaning": { "name": "Last cleaning" },
