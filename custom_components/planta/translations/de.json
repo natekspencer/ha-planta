@@ -1,0 +1,176 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "description": "Generieren Sie einen neuen App-Code, indem Sie eine App für Ihr Konto unter https://getplanta.com/apps/manage erstellen.\nHinweis: Sie müssen Premium-Abonnent sein, um auf diese Funktion zuzugreifen.",
+        "data": {
+          "code": "Code"
+        },
+        "data_description": {
+          "code": "Der für die Drittanbieter-Authentifizierung generierte App-Code."
+        }
+      },
+      "reauth_confirm": {
+        "data": {
+          "code": "Code"
+        },
+        "data_description": {
+          "code": "Der für die Drittanbieter-Authentifizierung generierte App-Code."
+        },
+        "description": "Generieren Sie einen neuen App-Code, indem Sie eine App für Ihr Konto unter https://getplanta.com/apps/manage erstellen.\nHinweis: Sie müssen Premium-Abonnent sein, um auf diese Funktion zuzugreifen.",
+        "title": "Authentifizierung abgelaufen"
+      }
+    },
+    "error": {
+      "cannot_connect": "Verbindung fehlgeschlagen",
+      "invalid_auth": "Ungültige Authentifizierung",
+      "invalid_host": "Ungültiger Hostname oder IP-Adresse",
+      "timeout_connect": "Zeitüberschreitung bei der Verbindungsherstellung",
+      "unknown": "Unerwarteter Fehler"
+    },
+    "abort": {
+      "already_configured": "Gerät ist bereits konfiguriert",
+      "reauth_successful": "Die erneute Authentifizierung war erfolgreich",
+      "reconfigure_successful": "Die Neukonfiguration war erfolgreich"
+    }
+  },
+  "entity": {
+    "button": {
+      "complete_cleaning": {
+        "name": "Reinigung abschließen"
+      },
+      "complete_fertilizing": {
+        "name": "Düngung abschließen"
+      },
+      "complete_misting": {
+        "name": "Besprühen abschließen"
+      },
+      "complete_watering": {
+        "name": "Bewässerung abschließen"
+      }
+    },
+    "sensor": {
+      "growing_medium": {
+        "name": "Wachstumsmedium",
+        "state": {
+          "acidicsoil": "Saure Erde",
+          "allpurposegardensoil": "Universelle Gartenerde",
+          "allpurposepottingmix": "Universelle Pflanzenerde",
+          "bonsaisoil": "Bonsai-Erde (Akadama)",
+          "cactussoil": "Kakteen- und Sukkulentenerde",
+          "cactuspalmcitrussoil": "Kakteen-, Palmen- und Zitruserde",
+          "carnivoresplantmix": "Fleischfressende-Pflanzen-Mischung",
+          "coconutcoirorpeat": "Kokosfaser oder Torf",
+          "epiphyticsoil": "Epiphytische Erde (Bromelien-Mischung)",
+          "none": "Keine Erde benötigt",
+          "notset": "Unbekannt",
+          "orchidpottingmix": "Orchideennerde",
+          "other": "Andere Erde",
+          "pottingsoilanddrainage": "Pflanzennerde + zusätzliche Drainage",
+          "rosesoil": "Rosenerde",
+          "seedstartingmix": "Aussaatmischung",
+          "semihydro": "Semi-Hydro (Pon, Leca, etc.)",
+          "sphagnummoss": "Sphagnum-Moos",
+          "treeshrubplantingmix": "Baum- und Strauchpflanzmischung",
+          "tropicalsoil": "Tropische-Pflanzen Erde",
+          "vegetableherbsoil": "Gemüse- und Kräutererde",
+          "water": "Wasser"
+        }
+      },
+      "health": {
+        "name": "Gesundheit",
+        "state": {
+          "bad": "Schlecht",
+          "excellent": "Ausgezeichnet",
+          "fair": "Mittelmäßig",
+          "good": "Gut",
+          "notset": "Unbekannt",
+          "poor": "Mangelhaft",
+          "sick": "Krank",
+          "verygood": "Sehr gut"
+        }
+      },
+      "last_cleaning": {
+        "name": "Letzte Reinigung"
+      },
+      "last_fertilizing": {
+        "name": "Letzte Düngung"
+      },
+      "last_misting": {
+        "name": "Letztes Besprühen"
+      },
+      "last_progress_update": {
+        "name": "Letztes Fortschrittsupdate"
+      },
+      "last_repotting": {
+        "name": "Letztes Umtopfen"
+      },
+      "last_watering": {
+        "name": "Letzte Bewässerung"
+      },
+      "pot_size": {
+        "name": "Topfgröße"
+      },
+      "pot_type": {
+        "name": "Topfart",
+        "state": {
+          "ground": "Boden",
+          "none": "Kein Topf",
+          "other": "Andere Töpfe",
+          "potconcrete": "Beton / Zement",
+          "potfabric": "Stoffbeutel",
+          "potglass": "Glasgefäß",
+          "potmetallic": "Metallgefäß",
+          "potoriginalplastic": "Ursprünglicher Plastiktopf aus dem Geschäft",
+          "potpeat": "Torfgefäß",
+          "potplastic": "Plastiktopf",
+          "potporcelain": "Porzellan / Steingut",
+          "potrectangular": "Rechteckige Pflanzgefäße",
+          "potshallow": "Flacher Pflanztopf / Bonsai",
+          "potterracotta": "Terrakotta / Tonkeramik",
+          "potwood": "Holz",
+          "windowbox": "Fensterkasten"
+        }
+      },
+      "scheduled_cleaning": {
+        "name": "Geplante Reinigung"
+      },
+      "scheduled_fertilizing": {
+        "name": "Geplante Düngung"
+      },
+      "scheduled_misting": {
+        "name": "Geplantes Besprühen"
+      },
+      "scheduled_progress_update": {
+        "name": "Geplantes Fortschrittsupdate"
+      },
+      "scheduled_repotting": {
+        "name": "Geplantes Umtopfen"
+      },
+      "scheduled_watering": {
+        "name": "Geplante Bewässerung"
+      },
+      "size": {
+        "name": "Größe"
+      },
+      "time_since_last_cleaning": {
+        "name": "Zeit seit der letzten Reinigung"
+      },
+      "time_since_last_fertilizing": {
+        "name": "Zeit seit der letzten Düngung"
+      },
+      "time_since_last_misting": {
+        "name": "Zeit seit dem letzten Besprühen"
+      },
+      "time_since_last_progress_update": {
+        "name": "Zeit seit dem letzten Fortschrittsupdate"
+      },
+      "time_since_last_repotting": {
+        "name": "Zeit seit dem letzten Umtopfen"
+      },
+      "time_since_last_watering": {
+        "name": "Zeit seit der letzten Bewässerung"
+      }
+    }
+  }
+}
