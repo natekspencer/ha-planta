@@ -57,8 +57,9 @@ class PlantaCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
             _LOGGER.exception(msg)
             raise UpdateFailed(msg) from err
         except Exception as ex:
-            _LOGGER.exception(ex)
-            raise UpdateFailed("Couldn't read from Planta") from ex
+            msg = "Couldn't read from Planta"
+            _LOGGER.exception(msg)
+            raise UpdateFailed(msg) from ex
         if data is None:
             raise ConfigEntryNotReady
         return {plant["id"]: plant for plant in data.get("plants", [])}
