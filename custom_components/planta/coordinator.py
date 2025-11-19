@@ -48,12 +48,16 @@ class PlantaCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
     async def _async_update_data(self) -> dict[str, dict[str, Any]]:
         """Fetch the latest data."""
         try:
-            async with async_timeout.timeout(10):
+            async with async_timeout.timeout(30):
                 data = await self.client.get_plants()
         except UnauthorizedError as err:
             raise ConfigEntryAuthFailed from err
+        except TimeoutError as err:
+            msg = "Timeout reading data from Planta"
+            _LOGGER.exception(msg)
+            raise UpdateFailed(msg) from err
         except Exception as ex:
-            _LOGGER.error(ex)
+            _LOGGER.exception(ex)
             raise UpdateFailed("Couldn't read from Planta") from ex
         if data is None:
             raise ConfigEntryNotReady
