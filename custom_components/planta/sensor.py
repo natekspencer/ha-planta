@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime, timedelta, timezone
+from datetime import datetime, timedelta
 import logging
 from typing import Any
 
@@ -20,13 +20,23 @@ from homeassistant.const import EntityCategory, UnitOfLength, UnitOfTime
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_time_interval
+import homeassistant.util.dt as dt_util
 
 from .coordinator import PlantaConfigEntry, PlantaCoordinator
 from .entity import PlantaEntity
 
 _LOGGER = logging.getLogger(__name__)
 
-PLANT_HEALTH_LIST = ["notset", "poor", "fair", "sick", "good", "bad", "verygood", "excellent"]
+PLANT_HEALTH_LIST = [
+    "notset",
+    "poor",
+    "fair",
+    "sick",
+    "good",
+    "bad",
+    "verygood",
+    "excellent",
+]
 
 
 def get_last_watering_completed(
@@ -36,7 +46,7 @@ def get_last_watering_completed(
     actions = plant.get("actions", {})
     action_date = max(
         (
-            datetime.fromisoformat(record["date"])
+            dt_util.parse_datetime(record["date"])
             for action_type in ("watering", "fertilizing")
             if (action := actions.get(action_type))
             and (record := action.get("completed"))
@@ -46,7 +56,7 @@ def get_last_watering_completed(
         default=None,
     )
     if time_since and action_date:
-        return (datetime.now(timezone.utc) - action_date).total_seconds()
+        return (dt_util.utcnow() - action_date).total_seconds()
     return action_date
 
 
@@ -56,14 +66,17 @@ def get_plant_action_date(
     """Get plant action date."""
     action = plant["actions"].get(action_type, {})
     if record := action.get("completed" if completed else "next"):
-        return datetime.fromisoformat(record["date"])
+        record_date = dt_util.parse_datetime(record["date"])
+        if completed:
+            return record_date
+        return record_date.replace(tzinfo=dt_util.DEFAULT_TIME_ZONE)
     return None
 
 
 def time_since_last_completed(plant: dict[str, Any], action_type: str) -> float | None:
     """Get time since last completed action."""
     if action_date := get_plant_action_date(plant, action_type, True):
-        return (datetime.now(timezone.utc) - action_date).total_seconds()
+        return (dt_util.utcnow() - action_date).total_seconds()
     return None
 
 
@@ -361,7 +374,7 @@ class PlantaSensorEntity(PlantaEntity, SensorEntity):
         if value is None:
             return value
         if self.device_class == SensorDeviceClass.TIMESTAMP:
-            return datetime.fromisoformat(value)
+            return dt_util.parse_datetime(value)
         if isinstance(value, str):
             value = value.lower()
         if self.device_class == SensorDeviceClass.ENUM and value not in self.options:
