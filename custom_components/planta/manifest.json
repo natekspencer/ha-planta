@@ -1,13 +1,19 @@
 {
   "domain": "planta",
   "name": "Planta",
-  "codeowners": ["@natekspencer"],
+  "codeowners": [
+    "@natekspencer"
+  ],
   "config_flow": true,
-  "documentation": "https://github.com/natekspencer/hacs-planta",
+  "documentation": "https://github.com/natekspencer/ha-planta",
   "integration_type": "hub",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/natekspencer/hacs-planta/issues",
-  "loggers": ["custom_components.planta"],
-  "requirements": ["stringcase==1.2.0"],
+  "issue_tracker": "https://github.com/natekspencer/ha-planta/issues",
+  "loggers": [
+    "custom_components.planta"
+  ],
+  "requirements": [
+    "stringcase==1.2.0"
+  ],
   "version": "0.0.0"
 }
