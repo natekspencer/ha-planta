@@ -1,10 +1,10 @@
-[![Release](https://img.shields.io/github/v/release/natekspencer/hacs-planta?style=for-the-badge)](https://github.com/natekspencer/hacs-planta/releases)
+[![Release](https://img.shields.io/github/v/release/natekspencer/ha-planta?style=for-the-badge)](https://github.com/natekspencer/ha-planta/releases)
 [![Buy Me A Coffee/Beer](https://img.shields.io/badge/Buy_Me_A_☕/🍺-F16061?style=for-the-badge&logo=ko-fi&logoColor=white&labelColor=grey)][ko-fi]
 [![Sponsor me on GitHub](https://img.shields.io/badge/Sponsor_me_on_GitHub-yellow?style=for-the-badge&logo=githubsponsors&logoColor=white&labelColor=grey)][github-sponsor]
 [![hacs_badge](https://img.shields.io/badge/HACS-Custom-41BDF5.svg?style=for-the-badge)](https://github.com/hacs/integration)
 
-![Downloads](https://img.shields.io/github/downloads/natekspencer/hacs-planta/total?style=flat-square)
-![Latest Downloads](https://img.shields.io/github/downloads/natekspencer/hacs-planta/latest/total?style=flat-square)
+![Downloads](https://img.shields.io/github/downloads/natekspencer/ha-planta/total?style=flat-square)
+![Latest Downloads](https://img.shields.io/github/downloads/natekspencer/ha-planta/latest/total?style=flat-square)
 
 <picture>
   <source media="(prefers-color-scheme: dark)" srcset="https://brands.home-assistant.io/planta/dark_logo.png">
@@ -25,8 +25,7 @@ There are two main ways to install this custom component within your Home Assist
 
 1. Using HACS (see https://hacs.xyz/ for installation instructions if you do not already have it installed):
 
-   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=natekspencer&repository=hacs-planta&category=integration)
-
+   [![Open your Home Assistant instance and open a repository inside the Home Assistant Community Store.](https://my.home-assistant.io/badges/hacs_repository.svg)](https://my.home-assistant.io/redirect/hacs_repository/?owner=natekspencer&repository=ha-planta&category=integration)
    1. Use the convenient My Home Assistant link above, or, from within Home Assistant, click on the link to **HACS**
    2. Click on **Integrations**
    3. Click on the vertical ellipsis in the top right and select **Custom repositories**
