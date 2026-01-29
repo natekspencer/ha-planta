@@ -2,7 +2,7 @@
   "config": {
     "step": {
       "user": {
-        "description": "Generieren Sie einen neuen App-Code, indem Sie eine App für Ihr Konto unter https://getplanta.com/apps/manage erstellen.\nHinweis: Sie müssen Premium-Abonnent sein, um auf diese Funktion zuzugreifen.",
+        "description": "Generieren Sie einen neuen App-Code, indem Sie eine App für Ihr Konto unter {planta_url} erstellen.\nHinweis: Sie müssen Premium-Abonnent sein, um auf diese Funktion zuzugreifen.",
         "data": {
           "code": "Code"
         },
@@ -17,7 +17,7 @@
         "data_description": {
           "code": "Der für die Drittanbieter-Authentifizierung generierte App-Code."
         },
-        "description": "Generieren Sie einen neuen App-Code, indem Sie eine App für Ihr Konto unter https://getplanta.com/apps/manage erstellen.\nHinweis: Sie müssen Premium-Abonnent sein, um auf diese Funktion zuzugreifen.",
+        "description": "Generieren Sie einen neuen App-Code, indem Sie eine App für Ihr Konto unter {planta_url} erstellen.\nHinweis: Sie müssen Premium-Abonnent sein, um auf diese Funktion zuzugreifen.",
         "title": "Authentifizierung abgelaufen"
       }
     },
