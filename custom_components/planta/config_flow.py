@@ -24,6 +24,9 @@ _LOGGER = logging.getLogger(__name__)
 
 STEP_USER_DATA_SCHEMA = vol.Schema({vol.Required(CONF_CODE): str})
 
+CONF_PLANTA_URL = "planta_url"
+PLANTA_URL = "https://getplanta.com/apps/manage"
+
 
 class PlantaConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a config flow for Planta."""
@@ -84,6 +87,7 @@ class PlantaConfigFlow(ConfigFlow, domain=DOMAIN):
             step_id=step_id,
             data_schema=self.add_suggested_values_to_schema(schema, suggested_values),
             errors=errors,
+            description_placeholders={CONF_PLANTA_URL: PLANTA_URL},
         )
 
     async def validate_client(self, user_input: dict[str, Any]) -> dict[str, str]:
