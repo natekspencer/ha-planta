@@ -22,7 +22,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_time_interval
 import homeassistant.util.dt as dt_util
 
-from .coordinator import PlantaConfigEntry, PlantaCoordinator
+from .coordinator import PlantaConfigEntry
 from .entity import PlantaEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -150,8 +150,9 @@ PLANT_DESCRIPTORS = (
         key="site",
         field="site",
         translation_key="site",
-        icon="mdi:map-marker",
         entity_category=EntityCategory.DIAGNOSTIC,
+        entity_registry_enabled_default=False,
+        icon="mdi:home-map-marker",
         value_fn=lambda plant: plant.get("site", {}).get("name"),
     ),
 )
@@ -333,19 +334,28 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up Planta sensors using config entry."""
-    coordinator: PlantaCoordinator = entry.runtime_data
-    entities = [
-        PlantaSensorEntity(coordinator, descriptor, plant_id)
-        for plant_id in coordinator.data
-        for descriptor in PLANT_DESCRIPTORS
-    ]
-    entities.extend(
-        PlantaSensorEntity(coordinator, descriptor, plant_id)
-        for plant_id, plant in coordinator.data.items()
-        for descriptor in ACTION_DESCRIPTORS
-        if plant["actions"][descriptor.field]["next"]
-    )
-    async_add_entities(entities)
+    coordinator = entry.runtime_data
+    known_plants: set[str] = set()
+
+    def _check_plants() -> None:
+        entities: list[PlantaSensorEntity] = []
+        if new_plants := set(coordinator.data) - known_plants:
+            known_plants.update(new_plants)
+            entities.extend(
+                PlantaSensorEntity(coordinator, description, plant_id)
+                for plant_id in new_plants
+                for description in PLANT_DESCRIPTORS
+            )
+            entities.extend(
+                PlantaSensorEntity(coordinator, description, plant_id)
+                for plant_id in new_plants
+                for description in ACTION_DESCRIPTORS
+                if coordinator.data[plant_id]["actions"][description.field]["next"]
+            )
+            async_add_entities(entities)
+
+    _check_plants()
+    entry.async_on_unload(coordinator.async_add_listener(_check_plants))
 
 
 class PlantaSensorEntity(PlantaEntity, SensorEntity):

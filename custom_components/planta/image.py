@@ -17,14 +17,20 @@ async def async_setup_entry(
     entry: PlantaConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up Planta camera using config entry."""
-    coordinator: PlantaCoordinator = entry.runtime_data
-    async_add_entities(
-        [
-            PlantaImageEntity(coordinator, IMAGE, plant_id)
-            for plant_id in coordinator.data
-        ]
-    )
+    """Set up Planta images using config entry."""
+    coordinator = entry.runtime_data
+    known_plants: set[str] = set()
+
+    def _check_plants() -> None:
+        if new_plants := set(coordinator.data) - known_plants:
+            known_plants.update(new_plants)
+            async_add_entities(
+                PlantaImageEntity(coordinator, IMAGE, plant_id)
+                for plant_id in new_plants
+            )
+
+    _check_plants()
+    entry.async_on_unload(coordinator.async_add_listener(_check_plants))
 
 
 IMAGE = ImageEntityDescription(key="image", name=None)
