@@ -150,6 +150,9 @@
       "scheduled_watering": {
         "name": "Geplante Bewässerung"
       },
+      "site": {
+        "name": "der Standort"
+      },
       "size": {
         "name": "Größe"
       },
