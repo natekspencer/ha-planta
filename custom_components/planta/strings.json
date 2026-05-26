@@ -150,6 +150,9 @@
       "scheduled_watering": {
         "name": "Scheduled watering"
       },
+      "site": {
+        "name": "Site"
+      },
       "size": {
         "name": "Size"
       },

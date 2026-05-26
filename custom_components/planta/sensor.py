@@ -146,6 +146,14 @@ PLANT_DESCRIPTORS = (
         entity_category=EntityCategory.DIAGNOSTIC,
         icon="mdi:pot-outline",
     ),
+    PlantaSensorEntityDescription(
+        key="site",
+        field="site",
+        translation_key="site",
+        icon="mdi:map-marker",
+        entity_category=EntityCategory.DIAGNOSTIC,
+        value_fn=lambda plant: plant.get("site", {}).get("name"),
+    ),
 )
 ACTION_DESCRIPTORS = (
     PlantaSensorEntityDescription(
