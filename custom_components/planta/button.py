@@ -10,7 +10,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.exceptions import ServiceValidationError
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
 
-from .coordinator import PlantaConfigEntry, PlantaCoordinator
+from .coordinator import PlantaConfigEntry
 from .entity import PlantaEntity
 
 _LOGGER = logging.getLogger(__name__)
@@ -21,15 +21,21 @@ async def async_setup_entry(
     entry: PlantaConfigEntry,
     async_add_entities: AddEntitiesCallback,
 ) -> None:
-    """Set up Planta todo using config entry."""
-    coordinator: PlantaCoordinator = entry.runtime_data
-    async_add_entities(
-        [
-            PlantaButtonEntity(coordinator, descriptor, plant_id)
-            for plant_id in coordinator.data
-            for descriptor in BUTTONS
-        ]
-    )
+    """Set up Planta buttons using config entry."""
+    coordinator = entry.runtime_data
+    known_plants: set[str] = set()
+
+    def _check_plants() -> None:
+        if new_plants := set(coordinator.data) - known_plants:
+            known_plants.update(new_plants)
+            async_add_entities(
+                PlantaButtonEntity(coordinator, description, plant_id)
+                for plant_id in new_plants
+                for description in BUTTONS
+            )
+
+    _check_plants()
+    entry.async_on_unload(coordinator.async_add_listener(_check_plants))
 
 
 @dataclass(frozen=True, kw_only=True)
