@@ -87,9 +87,15 @@ class PlantaCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
         ):
             device_registry = dr.async_get(self.hass)
             for device_id in stale_plants:
-                device = device_registry.async_get_device_by_identifier(
-                    (DOMAIN, device_id), self.config_entry.entry_id
-                )
+                # Home Assistant >= 2026.8
+                if hasattr(device_registry, "async_get_device_by_identifier"):
+                    device = device_registry.async_get_device_by_identifier(
+                        (DOMAIN, device_id), self.config_entry.entry_id
+                    )
+                else:
+                    device = device_registry.async_get_device(
+                        identifiers={(DOMAIN, device_id)}
+                    )
                 if device:
                     device_registry.async_remove_device(device.id)
         self.previous_plants = current_plants
