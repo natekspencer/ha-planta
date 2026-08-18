@@ -51,7 +51,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: PlantaConfigEntry) -> bo
     except ConfigEntryAuthFailed:
         raise
     except Exception:
-        _LOGGER.exception()
+        msg = "Unexpected error setting up Planta entry"
+        _LOGGER.exception(msg)
 
     if not coordinator.data:
         raise ConfigEntryNotReady
