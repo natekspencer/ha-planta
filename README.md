@@ -11,8 +11,8 @@
 <!-- END AUTO-GENERATED HEADER -->
 
 <picture>
-  <source media="(prefers-color-scheme: dark)" srcset="https://brands.home-assistant.io/planta/dark_logo.png">
-  <img alt="Planta logo" src="https://brands.home-assistant.io/planta/logo.png">
+  <source media="(prefers-color-scheme: dark)" srcset="custom_components/planta/brand/dark_logo.png">
+  <img alt="Planta logo" src="custom_components/planta/brand/logo.png">
 </picture>
 
 # Planta for Home Assistant
