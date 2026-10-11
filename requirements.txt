@@ -1,7 +1,5 @@
 # Home Assistant
 homeassistant>=2026.8
-numpy
-PyTurboJPEG
 
 # Integration
 aiohttp
@@ -9,6 +7,8 @@ stringcase==1.2.0
 
 # Development
 colorlog
-pip>=21.0
+isal
+pip>=26.2.1
 pre-commit
-ruff
+ruff>=0.17.0
+zlib-ng
