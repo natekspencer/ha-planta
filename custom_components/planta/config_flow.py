@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import asyncio
 from collections.abc import Mapping
 import json
 import logging
@@ -102,7 +101,7 @@ class PlantaConfigFlow(ConfigFlow, domain=DOMAIN):
             errors["base"] = "invalid_auth"
         except (PlantaError, HTTPStatusError) as err:
             errors["base"] = str(err)
-        except asyncio.TimeoutError:
+        except TimeoutError:
             errors["base"] = "timeout_connect"
         except Exception as ex:  # pylint: disable=broad-except # noqa: BLE001
             _LOGGER.error(ex)
