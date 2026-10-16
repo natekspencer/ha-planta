@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Callable
 from dataclasses import dataclass
-from datetime import datetime, timedelta
+from datetime import date, datetime, timedelta
 import logging
 from typing import Any
 
@@ -60,22 +60,27 @@ def get_last_watering_completed(
     return action_date
 
 
-def get_plant_action_date(
-    plant: dict[str, Any], action_type: str, completed: bool = False
+def get_plant_action_date(plant: dict[str, Any], action_type: str) -> date | None:
+    """Get plant next action date."""
+    action = plant["actions"].get(action_type) or {}
+    if (record := action.get("next")) and (date_str := record.get("date")):
+        return dt_util.parse_date(date_str[:10])
+    return None
+
+
+def get_plant_action_completed(
+    plant: dict[str, Any], action_type: str
 ) -> datetime | None:
-    """Get plant action date."""
-    action = plant["actions"].get(action_type, {})
-    if record := action.get("completed" if completed else "next"):
-        record_date = dt_util.parse_datetime(record["date"])
-        if completed:
-            return record_date
-        return record_date.replace(tzinfo=dt_util.DEFAULT_TIME_ZONE)
+    """Get plant last completed action timestamp."""
+    action = plant["actions"].get(action_type) or {}
+    if (record := action.get("completed")) and (date_str := record.get("date")):
+        return dt_util.parse_datetime(date_str)
     return None
 
 
 def time_since_last_completed(plant: dict[str, Any], action_type: str) -> float | None:
     """Get time since last completed action."""
-    if action_date := get_plant_action_date(plant, action_type, True):
+    if action_date := get_plant_action_completed(plant, action_type):
         return (dt_util.utcnow() - action_date).total_seconds()
     return None
 
@@ -96,7 +101,7 @@ class PlantaSensorEntityDescription(SensorEntityDescription):
 
     field: str
     is_pot: bool = False
-    value_fn: Callable[[dict[str, Any]], datetime | None] | None = None
+    value_fn: Callable[[dict[str, Any]], Any] | None = None
     extra_state_attributes_fn: Callable[[dict[str, Any]], dict[str, Any]] | None = None
 
 
@@ -161,7 +166,7 @@ ACTION_DESCRIPTORS = (
         key="scheduled_cleaning",
         field="cleaning",
         translation_key="scheduled_cleaning",
-        device_class=SensorDeviceClass.TIMESTAMP,
+        device_class=SensorDeviceClass.DATE,
         value_fn=lambda plant: get_plant_action_date(plant, "cleaning"),
     ),
     PlantaSensorEntityDescription(
@@ -170,7 +175,7 @@ ACTION_DESCRIPTORS = (
         translation_key="last_cleaning",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda plant: get_plant_action_date(plant, "cleaning", True),
+        value_fn=lambda plant: get_plant_action_completed(plant, "cleaning"),
     ),
     PlantaSensorEntityDescription(
         key="time_since_last_cleaning",
@@ -188,7 +193,7 @@ ACTION_DESCRIPTORS = (
         key="scheduled_fertilizing",
         field="fertilizing",
         translation_key="scheduled_fertilizing",
-        device_class=SensorDeviceClass.TIMESTAMP,
+        device_class=SensorDeviceClass.DATE,
         value_fn=lambda plant: get_plant_action_date(plant, "fertilizing"),
         extra_state_attributes_fn=lambda plant: custom_schedule(
             plant, "customFertilizing"
@@ -200,7 +205,7 @@ ACTION_DESCRIPTORS = (
         translation_key="last_fertilizing",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda plant: get_plant_action_date(plant, "fertilizing", True),
+        value_fn=lambda plant: get_plant_action_completed(plant, "fertilizing"),
     ),
     PlantaSensorEntityDescription(
         key="time_since_last_fertilizing",
@@ -218,7 +223,7 @@ ACTION_DESCRIPTORS = (
         key="scheduled_misting",
         field="misting",
         translation_key="scheduled_misting",
-        device_class=SensorDeviceClass.TIMESTAMP,
+        device_class=SensorDeviceClass.DATE,
         value_fn=lambda plant: get_plant_action_date(plant, "misting"),
     ),
     PlantaSensorEntityDescription(
@@ -227,7 +232,7 @@ ACTION_DESCRIPTORS = (
         translation_key="last_misting",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda plant: get_plant_action_date(plant, "misting", True),
+        value_fn=lambda plant: get_plant_action_completed(plant, "misting"),
     ),
     PlantaSensorEntityDescription(
         key="time_since_last_misting",
@@ -245,7 +250,7 @@ ACTION_DESCRIPTORS = (
         key="scheduled_progress_update",
         field="progressUpdate",
         translation_key="scheduled_progress_update",
-        device_class=SensorDeviceClass.TIMESTAMP,
+        device_class=SensorDeviceClass.DATE,
         value_fn=lambda plant: get_plant_action_date(plant, "progressUpdate"),
     ),
     PlantaSensorEntityDescription(
@@ -254,7 +259,7 @@ ACTION_DESCRIPTORS = (
         translation_key="last_progress_update",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda plant: get_plant_action_date(plant, "progressUpdate", True),
+        value_fn=lambda plant: get_plant_action_completed(plant, "progressUpdate"),
     ),
     PlantaSensorEntityDescription(
         key="time_since_last_progress_update",
@@ -272,7 +277,7 @@ ACTION_DESCRIPTORS = (
         key="scheduled_repotting",
         field="repotting",
         translation_key="scheduled_repotting",
-        device_class=SensorDeviceClass.TIMESTAMP,
+        device_class=SensorDeviceClass.DATE,
         value_fn=lambda plant: get_plant_action_date(plant, "repotting"),
     ),
     PlantaSensorEntityDescription(
@@ -281,7 +286,7 @@ ACTION_DESCRIPTORS = (
         translation_key="last_repotting",
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
-        value_fn=lambda plant: get_plant_action_date(plant, "repotting", True),
+        value_fn=lambda plant: get_plant_action_completed(plant, "repotting"),
     ),
     PlantaSensorEntityDescription(
         key="time_since_last_repotting",
@@ -299,7 +304,7 @@ ACTION_DESCRIPTORS = (
         key="scheduled_watering",
         field="watering",
         translation_key="scheduled_watering",
-        device_class=SensorDeviceClass.TIMESTAMP,
+        device_class=SensorDeviceClass.DATE,
         value_fn=lambda plant: get_plant_action_date(plant, "watering"),
         extra_state_attributes_fn=lambda plant: custom_schedule(
             plant, "customWatering"
@@ -379,7 +384,7 @@ class PlantaSensorEntity(PlantaEntity, SensorEntity):
         return super().extra_state_attributes
 
     @property
-    def native_value(self) -> int | str | datetime | None:
+    def native_value(self) -> int | str | date | datetime | None:
         """Return the value reported by the sensor."""
         if not self.plant:
             return None
