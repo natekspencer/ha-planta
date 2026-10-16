@@ -1,0 +1,21 @@
+{
+  "entity": {
+    "sensor": {
+      "growing_medium": {
+        "default": "mdi:pot"
+      },
+      "health": {
+        "default": "mdi:clipboard-pulse"
+      },
+      "pot_type": {
+        "default": "mdi:pot-outline"
+      },
+      "site": {
+        "default": "mdi:home-map-marker"
+      },
+      "size": {
+        "default": "mdi:arrow-up-down"
+      }
+    }
+  }
+}

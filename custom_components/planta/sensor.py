@@ -110,7 +110,6 @@ PLANT_DESCRIPTORS = (
         key="health",
         field="health",
         translation_key="health",
-        icon="mdi:clipboard-pulse",
         device_class=SensorDeviceClass.ENUM,
         entity_category=EntityCategory.DIAGNOSTIC,
         options=PLANT_HEALTH_LIST,
@@ -121,7 +120,6 @@ PLANT_DESCRIPTORS = (
         translation_key="size",
         device_class=SensorDeviceClass.DISTANCE,
         entity_category=EntityCategory.DIAGNOSTIC,
-        icon="mdi:arrow-up-down",
         native_unit_of_measurement=UnitOfLength.CENTIMETERS,
         state_class=SensorStateClass.MEASUREMENT,
     ),
@@ -131,7 +129,6 @@ PLANT_DESCRIPTORS = (
         is_pot=True,
         translation_key="growing_medium",
         entity_category=EntityCategory.DIAGNOSTIC,
-        icon="mdi:pot",
     ),
     PlantaSensorEntityDescription(
         key="pot_size",
@@ -149,7 +146,6 @@ PLANT_DESCRIPTORS = (
         is_pot=True,
         translation_key="pot_type",
         entity_category=EntityCategory.DIAGNOSTIC,
-        icon="mdi:pot-outline",
     ),
     PlantaSensorEntityDescription(
         key="site",
@@ -157,7 +153,6 @@ PLANT_DESCRIPTORS = (
         translation_key="site",
         entity_category=EntityCategory.DIAGNOSTIC,
         entity_registry_enabled_default=False,
-        icon="mdi:home-map-marker",
         value_fn=lambda plant: plant.get("site", {}).get("name"),
     ),
 )
