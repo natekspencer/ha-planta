@@ -2,11 +2,10 @@
 
 from __future__ import annotations
 
+import asyncio
 from datetime import timedelta
 import logging
 from typing import Any
-
-import async_timeout
 
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant
@@ -60,7 +59,7 @@ class PlantaCoordinator(DataUpdateCoordinator[dict[str, dict[str, Any]]]):
     async def _async_update_data(self) -> dict[str, dict[str, Any]]:
         """Fetch the latest data."""
         try:
-            async with async_timeout.timeout(30):
+            async with asyncio.timeout(30):
                 data = await self.client.get_plants()
         except UnauthorizedError as err:
             raise ConfigEntryAuthFailed from err

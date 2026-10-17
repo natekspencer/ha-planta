@@ -62,6 +62,49 @@ Alternatively:
 4. Follow the instructions to add the integration to your Home Assistant
 <!-- END AUTO-GENERATED INSTALLATION -->
 
+## 🪴 Entities
+
+Each plant is added as a device with the following entities. Entities marked ❌ are still created, but start disabled so they don't record any history. You can enable them individually per plant. Entities without a value when the plant is added also start disabled.
+
+### Plant sensors
+
+| Sensor         | Description                                         | Enabled by default |
+| -------------- | --------------------------------------------------- | :----------------: |
+| Health         | Plant health, as last reported in the Planta app    |         ❌         |
+| Size           | Plant height                                        |         ❌         |
+| Growing medium | Soil or other growing medium the plant is potted in |         ❌         |
+| Pot size       | Pot diameter                                        |         ❌         |
+| Pot type       | Pot material or type                                |         ❌         |
+| Site           | Site (room or area) the plant is in                 |         ❌         |
+
+### Care sensors
+
+Care sensors are only created for actions that are scheduled for the plant.
+
+| Action          | Scheduled (date) | Last (timestamp) | Time since last (duration) |
+| --------------- | :--------------: | :--------------: | :------------------------: |
+| Watering        |        ✅        |        ✅        |             ❌             |
+| Fertilizing     |        ✅        |        ❌        |             ❌             |
+| Misting         |        ✅        |        ❌        |             ❌             |
+| Cleaning        |        ✅        |        ❌        |             ❌             |
+| Repotting       |        ✅        |        ❌        |             ❌             |
+| Progress update |        ❌        |        ❌        |             ❌             |
+
+Last watering also counts liquid fertilizing.
+
+### Other entities
+
+| Entity                                                        | Description                             | Enabled by default              |
+| ------------------------------------------------------------- | --------------------------------------- | ------------------------------- |
+| Image                                                         | Plant photo                             | ✅                              |
+| Complete watering / fertilizing / misting / cleaning (button) | Marks the action as completed in Planta | ✅ when the action is scheduled |
+| Today's tasks (to-do list)                                    | Care tasks due today, across all plants | ✅                              |
+| Upcoming tasks (to-do list)                                   | Upcoming care tasks, across all plants  | ✅                              |
+
+## ⚙️ Options
+
+To change which sensors are enabled by default, go to the Planta integration and select **Configure**. Changes apply to plants added afterwards. Turn on **Enable all** to enable every sensor type, including types added in future versions. Select **Apply to existing plants** to also enable or disable the sensors of existing plants to match. Sensors you disabled yourself are left alone, but sensors you enabled yourself are disabled if their type isn't selected.
+
 ---
 
 <!-- BEGIN AUTO-GENERATED FOOTER -->

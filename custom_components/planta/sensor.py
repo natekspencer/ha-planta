@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from collections.abc import Callable
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from datetime import date, datetime, timedelta
 import logging
 from typing import Any
@@ -22,6 +22,7 @@ from homeassistant.helpers.entity_platform import AddEntitiesCallback
 from homeassistant.helpers.event import async_track_time_interval
 import homeassistant.util.dt as dt_util
 
+from .const import CONF_ENABLE_ALL, CONF_ENABLED_SENSORS
 from .coordinator import PlantaConfigEntry
 from .entity import PlantaEntity
 
@@ -110,6 +111,7 @@ PLANT_DESCRIPTORS = (
         key="health",
         field="health",
         translation_key="health",
+        entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.ENUM,
         entity_category=EntityCategory.DIAGNOSTIC,
         options=PLANT_HEALTH_LIST,
@@ -118,6 +120,7 @@ PLANT_DESCRIPTORS = (
         key="size",
         field="size",
         translation_key="size",
+        entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.DISTANCE,
         entity_category=EntityCategory.DIAGNOSTIC,
         native_unit_of_measurement=UnitOfLength.CENTIMETERS,
@@ -128,6 +131,7 @@ PLANT_DESCRIPTORS = (
         field="soil",
         is_pot=True,
         translation_key="growing_medium",
+        entity_registry_enabled_default=False,
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     PlantaSensorEntityDescription(
@@ -135,6 +139,7 @@ PLANT_DESCRIPTORS = (
         field="size",
         is_pot=True,
         translation_key="pot_size",
+        entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.DISTANCE,
         entity_category=EntityCategory.DIAGNOSTIC,
         native_unit_of_measurement=UnitOfLength.CENTIMETERS,
@@ -145,6 +150,7 @@ PLANT_DESCRIPTORS = (
         field="type",
         is_pot=True,
         translation_key="pot_type",
+        entity_registry_enabled_default=False,
         entity_category=EntityCategory.DIAGNOSTIC,
     ),
     PlantaSensorEntityDescription(
@@ -168,6 +174,7 @@ ACTION_DESCRIPTORS = (
         key="last_cleaning",
         field="cleaning",
         translation_key="last_cleaning",
+        entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda plant: get_plant_action_completed(plant, "cleaning"),
@@ -198,6 +205,7 @@ ACTION_DESCRIPTORS = (
         key="last_fertilizing",
         field="fertilizing",
         translation_key="last_fertilizing",
+        entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda plant: get_plant_action_completed(plant, "fertilizing"),
@@ -225,6 +233,7 @@ ACTION_DESCRIPTORS = (
         key="last_misting",
         field="misting",
         translation_key="last_misting",
+        entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda plant: get_plant_action_completed(plant, "misting"),
@@ -245,6 +254,7 @@ ACTION_DESCRIPTORS = (
         key="scheduled_progress_update",
         field="progressUpdate",
         translation_key="scheduled_progress_update",
+        entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.DATE,
         value_fn=lambda plant: get_plant_action_date(plant, "progressUpdate"),
     ),
@@ -252,6 +262,7 @@ ACTION_DESCRIPTORS = (
         key="last_progress_update",
         field="progressUpdate",
         translation_key="last_progress_update",
+        entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda plant: get_plant_action_completed(plant, "progressUpdate"),
@@ -279,6 +290,7 @@ ACTION_DESCRIPTORS = (
         key="last_repotting",
         field="repotting",
         translation_key="last_repotting",
+        entity_registry_enabled_default=False,
         device_class=SensorDeviceClass.TIMESTAMP,
         entity_category=EntityCategory.DIAGNOSTIC,
         value_fn=lambda plant: get_plant_action_completed(plant, "repotting"),
@@ -326,6 +338,29 @@ ACTION_DESCRIPTORS = (
         value_fn=lambda plant: get_last_watering_completed(plant, True),
     ),
 )
+PLANT_SENSOR_KEYS = [description.key for description in PLANT_DESCRIPTORS]
+CARE_ACTIONS = [
+    description.key.removeprefix("scheduled_")
+    for description in ACTION_DESCRIPTORS
+    if description.key.startswith("scheduled_")
+]
+DEFAULT_ENABLED_SENSORS = [
+    description.key
+    for description in PLANT_DESCRIPTORS + ACTION_DESCRIPTORS
+    if description.entity_registry_enabled_default
+]
+
+
+def get_enabled_sensors(entry: PlantaConfigEntry) -> set[str]:
+    """Get the sensor types selected to be enabled by default for new plants."""
+    return set(entry.options.get(CONF_ENABLED_SENSORS, DEFAULT_ENABLED_SENSORS))
+
+
+def is_sensor_enabled(entry: PlantaConfigEntry, key: str) -> bool:
+    """Return if a sensor type should be enabled by default for new plants."""
+    return entry.options.get(CONF_ENABLE_ALL, False) or key in get_enabled_sensors(
+        entry
+    )
 
 
 async def async_setup_entry(
@@ -336,6 +371,14 @@ async def async_setup_entry(
     """Set up Planta sensors using config entry."""
     coordinator = entry.runtime_data
     known_plants: set[str] = set()
+    plant_descriptors = [
+        replace(d, entity_registry_enabled_default=is_sensor_enabled(entry, d.key))
+        for d in PLANT_DESCRIPTORS
+    ]
+    action_descriptors = [
+        replace(d, entity_registry_enabled_default=is_sensor_enabled(entry, d.key))
+        for d in ACTION_DESCRIPTORS
+    ]
 
     def _check_plants() -> None:
         entities: list[PlantaSensorEntity] = []
@@ -344,12 +387,12 @@ async def async_setup_entry(
             entities.extend(
                 PlantaSensorEntity(coordinator, description, plant_id)
                 for plant_id in new_plants
-                for description in PLANT_DESCRIPTORS
+                for description in plant_descriptors
             )
             entities.extend(
                 PlantaSensorEntity(coordinator, description, plant_id)
                 for plant_id in new_plants
-                for description in ACTION_DESCRIPTORS
+                for description in action_descriptors
                 if coordinator.data[plant_id]["actions"][description.field]["next"]
             )
             async_add_entities(entities)

@@ -175,5 +175,73 @@
         "name": "Zeit seit der letzten Bewässerung"
       }
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Planta-Optionen",
+        "description": "Wählen Sie aus, welche Sensoren beim Hinzufügen einer Pflanze standardmäßig aktiviert sind. Nicht ausgewählte Sensoren werden trotzdem erstellt, sind aber deaktiviert und zeichnen keinen Verlauf auf. Sie können pro Pflanze einzeln aktiviert werden.",
+        "data": {
+          "enable_all": "Alle aktivieren",
+          "apply_to_existing": "Auf vorhandene Pflanzen anwenden"
+        },
+        "data_description": {
+          "enable_all": "Alle Sensortypen standardmäßig aktivieren, auch solche, die in zukünftigen Versionen hinzukommen. Wenn aktiviert, wird die Auswahl unten ignoriert, bleibt aber erhalten.",
+          "apply_to_existing": "Die Sensoren vorhandener Pflanzen ebenfalls entsprechend dieser Auswahl aktivieren oder deaktivieren. Von Ihnen selbst deaktivierte Sensoren bleiben unverändert, von Ihnen selbst aktivierte Sensoren werden jedoch deaktiviert, wenn ihr Typ nicht ausgewählt ist."
+        },
+        "sections": {
+          "plant": {
+            "name": "Pflanzensensoren",
+            "description": "Gesundheit, Größe, Topf- und Standortangaben.",
+            "data": {
+              "sensors": "Standardmäßig aktiviert"
+            }
+          },
+          "scheduled": {
+            "name": "Geplante Pflege",
+            "description": "Datum, an dem die Pflegeaktion als Nächstes fällig ist.",
+            "data": {
+              "sensors": "Standardmäßig aktiviert"
+            }
+          },
+          "last": {
+            "name": "Letzte Pflege",
+            "description": "Zeitpunkt, an dem die Pflegeaktion zuletzt erledigt wurde.",
+            "data": {
+              "sensors": "Standardmäßig aktiviert"
+            }
+          },
+          "time_since_last": {
+            "name": "Zeit seit der letzten Pflege",
+            "description": "Wie lange die Pflegeaktion zuletzt her ist.",
+            "data": {
+              "sensors": "Standardmäßig aktiviert"
+            }
+          }
+        }
+      }
+    }
+  },
+  "selector": {
+    "care_action": {
+      "options": {
+        "watering": "Bewässerung",
+        "fertilizing": "Düngung",
+        "misting": "Besprühen",
+        "cleaning": "Reinigung",
+        "repotting": "Umtopfen",
+        "progress_update": "Fortschrittsupdate"
+      }
+    },
+    "plant_sensor": {
+      "options": {
+        "health": "Gesundheit",
+        "size": "Größe",
+        "growing_medium": "Wachstumsmedium",
+        "pot_size": "Topfgröße",
+        "pot_type": "Topfart",
+        "site": "Standort"
+      }
+    }
   }
 }

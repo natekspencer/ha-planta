@@ -191,5 +191,73 @@
     "invalid_action": {
       "message": "The {action} action can only be completed in the Planta app at this time."
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Planta options",
+        "description": "Select which sensors are enabled by default when a plant is added. Sensors that aren't selected are still created, but start disabled and don't record any history. They can be enabled individually per plant.",
+        "data": {
+          "enable_all": "Enable all",
+          "apply_to_existing": "Apply to existing plants"
+        },
+        "data_description": {
+          "enable_all": "Enable every sensor type by default, including types added in future versions. When on, the selections below are ignored but kept.",
+          "apply_to_existing": "Also enable or disable the sensors of existing plants to match this selection. Sensors you disabled yourself are left alone, but sensors you enabled yourself are disabled if their type isn't selected."
+        },
+        "sections": {
+          "plant": {
+            "name": "Plant sensors",
+            "description": "Health, size, pot and site details.",
+            "data": {
+              "sensors": "Enabled by default"
+            }
+          },
+          "scheduled": {
+            "name": "Scheduled care",
+            "description": "Date the care action is next due.",
+            "data": {
+              "sensors": "Enabled by default"
+            }
+          },
+          "last": {
+            "name": "Last care",
+            "description": "When the care action was last completed.",
+            "data": {
+              "sensors": "Enabled by default"
+            }
+          },
+          "time_since_last": {
+            "name": "Time since last care",
+            "description": "How long ago the care action was last completed.",
+            "data": {
+              "sensors": "Enabled by default"
+            }
+          }
+        }
+      }
+    }
+  },
+  "selector": {
+    "care_action": {
+      "options": {
+        "watering": "Watering",
+        "fertilizing": "Fertilizing",
+        "misting": "Misting",
+        "cleaning": "Cleaning",
+        "repotting": "Repotting",
+        "progress_update": "Progress update"
+      }
+    },
+    "plant_sensor": {
+      "options": {
+        "health": "Health",
+        "size": "Size",
+        "growing_medium": "Growing medium",
+        "pot_size": "Pot size",
+        "pot_type": "Pot type",
+        "site": "Site"
+      }
+    }
   }
 }
