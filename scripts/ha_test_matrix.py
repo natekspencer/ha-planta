@@ -80,13 +80,11 @@ def declared_minimum() -> Version:
 
 def homeassistant_pin(requires: list[str]) -> Version | None:
     """Return the exact Home Assistant version in a list of requirements, if any."""
-    for line in requires:
-        if not line.startswith("homeassistant"):
-            continue
-        requirement = Requirement(line)
-        for specifier in requirement.specifier:
-            if requirement.name == "homeassistant" and specifier.operator == "==":
-                return Version(specifier.version)
+    for requirement in map(Requirement, requires):
+        if requirement.name == "homeassistant":
+            for specifier in requirement.specifier:
+                if specifier.operator == "==":
+                    return Version(specifier.version)
     return None
 
 

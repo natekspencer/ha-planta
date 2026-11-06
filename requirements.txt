@@ -6,10 +6,11 @@ aiohttp
 stringcase==1.2.0
 
 # Development
+--requirement requirements_test.txt
 colorlog
 isal
 pip>=26.2.1
 pre-commit
-pytest-homeassistant-custom-component
+pytest-homeassistant
 ruff>=0.17.0
 zlib-ng
