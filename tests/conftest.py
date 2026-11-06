@@ -8,11 +8,12 @@ from typing import Any
 from unittest.mock import AsyncMock, MagicMock, patch
 
 import pytest
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.planta.const import DOMAIN
 from homeassistant.const import CONF_TOKEN
 from homeassistant.core import HomeAssistant
+
+from . import MockConfigEntry
 
 ACTIONS = (
     "cleaning",

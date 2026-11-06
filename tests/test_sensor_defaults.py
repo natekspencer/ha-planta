@@ -7,13 +7,13 @@ from typing import Any
 from unittest.mock import MagicMock
 
 import pytest
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.planta.const import CONF_ENABLE_ALL, CONF_ENABLED_SENSORS, DOMAIN
 from custom_components.planta.sensor import DEFAULT_ENABLED_SENSORS
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers import entity_registry as er
 
+from . import MockConfigEntry
 from .conftest import make_plant
 
 ALL_SENSOR_KEYS = {
