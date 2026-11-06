@@ -6,7 +6,6 @@ from collections.abc import Callable
 from typing import Any
 
 import pytest
-from pytest_homeassistant_custom_component.common import MockConfigEntry
 
 from custom_components.planta.const import (
     CONF_APPLY_TO_EXISTING,
@@ -18,6 +17,7 @@ from homeassistant.core import HomeAssistant
 from homeassistant.data_entry_flow import FlowResultType
 from homeassistant.helpers import entity_registry as er
 
+from . import MockConfigEntry
 from .test_sensor_defaults import sensor_entry
 
 SECTIONS = ("plant", "scheduled", "last", "time_since_last")
