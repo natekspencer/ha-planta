@@ -189,6 +189,14 @@ async def test_custom_task_renamed(
         state = hass.states.get(entity_id(entity_registry, key, domain))
         assert state.attributes["friendly_name"] == f"Plant plant1 {name}"
 
+    # An empty name falls back to the task id, as in the to-do lists
+    plants[0] = with_tasks(make_plant("plant1"), custom=[custom_task("abc-123", "")])
+    await config_entry.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+
+    state = hass.states.get(entity_id(entity_registry, "scheduled_custom_task_abc_123"))
+    assert state.attributes["friendly_name"] == "Plant plant1 Scheduled abc-123"
+
 
 @pytest.mark.parametrize(
     "options", [{CONF_ENABLED_SENSORS: ["last_pruning", "time_since_last_custom_task"]}]

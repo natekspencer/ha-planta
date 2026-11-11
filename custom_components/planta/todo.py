@@ -25,7 +25,7 @@ import homeassistant.util.dt as dt_util
 from . import PlantaConfigEntry
 from .const import CUSTOM_TASK_PREFIX, DOMAIN, PRUNING_PREFIX
 from .coordinator import PlantaCoordinator
-from .entity import get_plant_name, get_plant_tasks, is_task_action
+from .entity import get_plant_name, get_plant_tasks, get_task_name, is_task_action
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -63,10 +63,7 @@ def _action_name(action_type: str, details: dict | None = None) -> str:
         technique = action_type.removeprefix(PRUNING_PREFIX)
         return f"✂️🌿 Prune ({PRUNING_TECHNIQUE_MAP.get(technique, technique)})"
     if action_type.startswith(CUSTOM_TASK_PREFIX):
-        name = (details or {}).get("name") or action_type.removeprefix(
-            CUSTOM_TASK_PREFIX
-        )
-        return f"📋 {name}"
+        return f"📋 {get_task_name(details or {'actionType': action_type})}"
     return ACTION_TYPE_MAP.get(action_type, action_type.title())
 
 

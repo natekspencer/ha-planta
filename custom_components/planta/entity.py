@@ -60,6 +60,11 @@ def get_plant_action(
     return action if isinstance(action, dict) else None
 
 
+def get_task_name(task: dict[str, Any]) -> str:
+    """Get the name of a custom task, falling back to its id."""
+    return task.get("name") or task["actionType"].removeprefix(CUSTOM_TASK_PREFIX)
+
+
 class TaskKey(NamedTuple):
     """Entity key and translation details of a pruning or custom task."""
 
@@ -87,7 +92,7 @@ def get_task_key(task: dict[str, Any]) -> TaskKey | None:
         return TaskKey(
             f"custom_task_{task_id}",
             "custom_task",
-            {"task": task.get("name") or task_id},
+            {"task": get_task_name(task)},
         )
     return None
 
@@ -135,8 +140,8 @@ class PlantaEntity(CoordinatorEntity[PlantaCoordinator]):
             field
             and field.startswith(CUSTOM_TASK_PREFIX)
             and (task := get_plant_action(self.plant, field))
-            and (name := task.get("name"))
-            and self.translation_placeholders.get("task") != name
+            and (name := get_task_name(task))
+            != self.translation_placeholders.get("task")
         ):
             self._attr_translation_placeholders = {"task": name}
             # The translated name is cached and only invalidated by setting
