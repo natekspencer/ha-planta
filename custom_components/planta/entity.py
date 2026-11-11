@@ -6,6 +6,7 @@ from typing import Any, NamedTuple
 
 from stringcase import snakecase
 
+from homeassistant.core import callback
 from homeassistant.helpers.entity import DeviceInfo, EntityDescription
 from homeassistant.helpers.update_coordinator import CoordinatorEntity
 
@@ -120,6 +121,27 @@ class PlantaEntity(CoordinatorEntity[PlantaCoordinator]):
             + (f" '{variety}'" if (variety := names.get("variety")) else ""),
             suggested_area=self.plant["site"]["name"],
         )
+
+    @callback
+    def _handle_coordinator_update(self) -> None:
+        """Handle updated data from the coordinator."""
+        self._update_task_name()
+        super()._handle_coordinator_update()
+
+    def _update_task_name(self) -> None:
+        """Keep the name of a custom task entity in sync with the task."""
+        field = getattr(self.entity_description, "field", None)
+        if (
+            field
+            and field.startswith(CUSTOM_TASK_PREFIX)
+            and (task := get_plant_action(self.plant, field))
+            and (name := task.get("name"))
+            and self.translation_placeholders.get("task") != name
+        ):
+            self._attr_translation_placeholders = {"task": name}
+            # The translated name is cached and only invalidated by setting
+            # `_attr_name`, so invalidate it the same way Home Assistant does
+            self.__dict__.pop("name", None)
 
     @property
     def plant(self) -> dict[str, Any] | None:

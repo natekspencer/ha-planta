@@ -166,6 +166,30 @@ async def test_tasks_added_and_removed(
         assert state.state == STATE_UNAVAILABLE
 
 
+async def test_custom_task_renamed(
+    hass: HomeAssistant,
+    entity_registry: er.EntityRegistry,
+    config_entry,
+    plants: list[dict[str, Any]],
+    setup_integration: Callable[[], Any],
+) -> None:
+    """Test custom task entities follow a rename of the task."""
+    await setup_integration()
+
+    plants[0] = with_tasks(
+        make_plant("plant1"), custom=[custom_task("abc-123", "Turn pot")]
+    )
+    await config_entry.runtime_data.async_refresh()
+    await hass.async_block_till_done()
+
+    for key, domain, name in (
+        ("scheduled_custom_task_abc_123", "sensor", "Scheduled Turn pot"),
+        ("complete_custom_task_abc_123", "button", "Complete Turn pot"),
+    ):
+        state = hass.states.get(entity_id(entity_registry, key, domain))
+        assert state.attributes["friendly_name"] == f"Plant plant1 {name}"
+
+
 @pytest.mark.parametrize(
     "options", [{CONF_ENABLED_SENSORS: ["last_pruning", "time_since_last_custom_task"]}]
 )
