@@ -23,9 +23,9 @@ from homeassistant.helpers.update_coordinator import CoordinatorEntity
 import homeassistant.util.dt as dt_util
 
 from . import PlantaConfigEntry
-from .const import DOMAIN
+from .const import CUSTOM_TASK_PREFIX, DOMAIN, PRUNING_PREFIX
 from .coordinator import PlantaCoordinator
-from .entity import get_plant_name
+from .entity import get_plant_name, get_plant_tasks, get_task_name, is_task_action
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,8 +38,42 @@ ACTION_TYPE_MAP: Final[dict[str, str]] = {
     "watering": "🪴💧 Water",
 }
 ALLOWED_ACTIONS: Final[set[str]] = {"cleaning", "fertilizing", "misting", "watering"}
+PRUNING_TECHNIQUE_MAP: Final[dict[str, str]] = {
+    "deadHeadingPinching": "deadheading",
+    "deadWooding": "deadwooding",
+    "cutBackOneThird": "cut back by a third",
+    "removeSuckersPinching": "remove suckers",
+    "removeFlowersPinching": "remove flowers",
+    "lollipopping": "lollipopping",
+    "topping": "topping",
+    "thinning": "thinning",
+}
 
 TODO_LISTS = ("today", "upcoming")
+
+
+def _is_allowed_action(action_type: str) -> bool:
+    """Return if the action can be completed through the API."""
+    return action_type in ALLOWED_ACTIONS or is_task_action(action_type)
+
+
+def _action_name(action_type: str, details: dict | None = None) -> str:
+    """Get the display name of an action."""
+    if action_type.startswith(PRUNING_PREFIX):
+        technique = action_type.removeprefix(PRUNING_PREFIX)
+        return f"✂️🌿 Prune ({PRUNING_TECHNIQUE_MAP.get(technique, technique)})"
+    if action_type.startswith(CUSTOM_TASK_PREFIX):
+        return f"📋 {get_task_name(details or {'actionType': action_type})}"
+    return ACTION_TYPE_MAP.get(action_type, action_type.title())
+
+
+def _plant_actions(actions: dict) -> Iterator[tuple[str, dict]]:
+    """Yield the action type and details of each action, including tasks."""
+    for action_type, details in actions.items():
+        if isinstance(details, dict):
+            yield action_type, details
+    for task in get_plant_tasks({"actions": actions}):
+        yield task["actionType"], task
 
 
 def _today() -> date:
@@ -60,12 +94,9 @@ def _todo_items(
         plant_name = get_plant_name(plant)
         site_name = plant.get("site", {}).get("name")
 
-        for action_type, details in actions.items():
-            if not isinstance(details, dict):
-                continue
-
-            action_name = ACTION_TYPE_MAP.get(action_type, action_type.title())
-            if action_type not in ALLOWED_ACTIONS:
+        for action_type, details in _plant_actions(actions):
+            action_name = _action_name(action_type, details)
+            if not _is_allowed_action(action_type):
                 action_name += " (app only)"
             summary = f"{plant_name}: {action_name}"
             uid = json.dumps((plant_id, action_type))
@@ -170,8 +201,8 @@ class PlantaTodoListEntity(CoordinatorEntity[PlantaCoordinator], TodoListEntity)
                 translation_domain=DOMAIN, translation_key="complete_only"
             )
         plant_id, action_type = json.loads(item.uid)
-        if action_type not in ALLOWED_ACTIONS:
-            action_name = ACTION_TYPE_MAP.get(action_type, action_type.title())
+        if not _is_allowed_action(action_type):
+            action_name = _action_name(action_type)
             raise ServiceValidationError(
                 translation_domain=DOMAIN,
                 translation_key="invalid_action",

@@ -31,7 +31,12 @@ from homeassistant.helpers.selector import (
 from .const import CONF_APPLY_TO_EXISTING, CONF_ENABLE_ALL, CONF_ENABLED_SENSORS, DOMAIN
 from .pyplanta import Planta
 from .pyplanta.exceptions import PlantaError, UnauthorizedError
-from .sensor import CARE_ACTIONS, PLANT_SENSOR_KEYS, get_enabled_sensors
+from .sensor import (
+    CARE_ACTIONS,
+    PLANT_SENSOR_KEYS,
+    get_enabled_sensors,
+    get_sensor_type,
+)
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -217,7 +222,7 @@ class PlantaOptionsFlow(OptionsFlowWithReload):
         ):
             if entity.domain != Platform.SENSOR:
                 continue
-            key = entity.unique_id.rsplit("-", 1)[-1]
+            key = get_sensor_type(entity.unique_id.rsplit("-", 1)[-1])
             if enable_all or key in enabled_sensors:
                 if entity.disabled_by is er.RegistryEntryDisabler.INTEGRATION:
                     registry.async_update_entity(entity.entity_id, disabled_by=None)

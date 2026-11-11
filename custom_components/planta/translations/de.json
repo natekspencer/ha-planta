@@ -39,11 +39,38 @@
       "complete_cleaning": {
         "name": "Reinigung abschließen"
       },
+      "complete_custom_task": {
+        "name": "{task} abschließen"
+      },
       "complete_fertilizing": {
         "name": "Düngung abschließen"
       },
       "complete_misting": {
         "name": "Besprühen abschließen"
+      },
+      "complete_pruning_cut_back_one_third": {
+        "name": "Rückschnitt abschließen (um ein Drittel)"
+      },
+      "complete_pruning_dead_heading_pinching": {
+        "name": "Rückschnitt abschließen (Ausputzen)"
+      },
+      "complete_pruning_dead_wooding": {
+        "name": "Rückschnitt abschließen (Totholz)"
+      },
+      "complete_pruning_lollipopping": {
+        "name": "Rückschnitt abschließen (Lollipopping)"
+      },
+      "complete_pruning_remove_flowers_pinching": {
+        "name": "Rückschnitt abschließen (Blüten)"
+      },
+      "complete_pruning_remove_suckers_pinching": {
+        "name": "Rückschnitt abschließen (Geiztriebe)"
+      },
+      "complete_pruning_thinning": {
+        "name": "Rückschnitt abschließen (Auslichten)"
+      },
+      "complete_pruning_topping": {
+        "name": "Rückschnitt abschließen (Kappen)"
       },
       "complete_watering": {
         "name": "Bewässerung abschließen"
@@ -93,6 +120,9 @@
       "last_cleaning": {
         "name": "Letzte Reinigung"
       },
+      "last_custom_task": {
+        "name": "Zuletzt: {task}"
+      },
       "last_fertilizing": {
         "name": "Letzte Düngung"
       },
@@ -101,6 +131,30 @@
       },
       "last_progress_update": {
         "name": "Letztes Fortschrittsupdate"
+      },
+      "last_pruning_cut_back_one_third": {
+        "name": "Letzter Rückschnitt (um ein Drittel)"
+      },
+      "last_pruning_dead_heading_pinching": {
+        "name": "Letzter Rückschnitt (Ausputzen)"
+      },
+      "last_pruning_dead_wooding": {
+        "name": "Letzter Rückschnitt (Totholz)"
+      },
+      "last_pruning_lollipopping": {
+        "name": "Letzter Rückschnitt (Lollipopping)"
+      },
+      "last_pruning_remove_flowers_pinching": {
+        "name": "Letzter Rückschnitt (Blüten)"
+      },
+      "last_pruning_remove_suckers_pinching": {
+        "name": "Letzter Rückschnitt (Geiztriebe)"
+      },
+      "last_pruning_thinning": {
+        "name": "Letzter Rückschnitt (Auslichten)"
+      },
+      "last_pruning_topping": {
+        "name": "Letzter Rückschnitt (Kappen)"
       },
       "last_repotting": {
         "name": "Letztes Umtopfen"
@@ -135,6 +189,9 @@
       "scheduled_cleaning": {
         "name": "Geplante Reinigung"
       },
+      "scheduled_custom_task": {
+        "name": "Geplant: {task}"
+      },
       "scheduled_fertilizing": {
         "name": "Geplante Düngung"
       },
@@ -143,6 +200,30 @@
       },
       "scheduled_progress_update": {
         "name": "Geplantes Fortschrittsupdate"
+      },
+      "scheduled_pruning_cut_back_one_third": {
+        "name": "Geplanter Rückschnitt (um ein Drittel)"
+      },
+      "scheduled_pruning_dead_heading_pinching": {
+        "name": "Geplanter Rückschnitt (Ausputzen)"
+      },
+      "scheduled_pruning_dead_wooding": {
+        "name": "Geplanter Rückschnitt (Totholz)"
+      },
+      "scheduled_pruning_lollipopping": {
+        "name": "Geplanter Rückschnitt (Lollipopping)"
+      },
+      "scheduled_pruning_remove_flowers_pinching": {
+        "name": "Geplanter Rückschnitt (Blüten)"
+      },
+      "scheduled_pruning_remove_suckers_pinching": {
+        "name": "Geplanter Rückschnitt (Geiztriebe)"
+      },
+      "scheduled_pruning_thinning": {
+        "name": "Geplanter Rückschnitt (Auslichten)"
+      },
+      "scheduled_pruning_topping": {
+        "name": "Geplanter Rückschnitt (Kappen)"
       },
       "scheduled_repotting": {
         "name": "Geplantes Umtopfen"
@@ -159,6 +240,9 @@
       "time_since_last_cleaning": {
         "name": "Zeit seit der letzten Reinigung"
       },
+      "time_since_last_custom_task": {
+        "name": "Zeit seit: {task}"
+      },
       "time_since_last_fertilizing": {
         "name": "Zeit seit der letzten Düngung"
       },
@@ -167,6 +251,30 @@
       },
       "time_since_last_progress_update": {
         "name": "Zeit seit dem letzten Fortschrittsupdate"
+      },
+      "time_since_last_pruning_cut_back_one_third": {
+        "name": "Zeit seit dem letzten Rückschnitt (um ein Drittel)"
+      },
+      "time_since_last_pruning_dead_heading_pinching": {
+        "name": "Zeit seit dem letzten Rückschnitt (Ausputzen)"
+      },
+      "time_since_last_pruning_dead_wooding": {
+        "name": "Zeit seit dem letzten Rückschnitt (Totholz)"
+      },
+      "time_since_last_pruning_lollipopping": {
+        "name": "Zeit seit dem letzten Rückschnitt (Lollipopping)"
+      },
+      "time_since_last_pruning_remove_flowers_pinching": {
+        "name": "Zeit seit dem letzten Rückschnitt (Blüten)"
+      },
+      "time_since_last_pruning_remove_suckers_pinching": {
+        "name": "Zeit seit dem letzten Rückschnitt (Geiztriebe)"
+      },
+      "time_since_last_pruning_thinning": {
+        "name": "Zeit seit dem letzten Rückschnitt (Auslichten)"
+      },
+      "time_since_last_pruning_topping": {
+        "name": "Zeit seit dem letzten Rückschnitt (Kappen)"
       },
       "time_since_last_repotting": {
         "name": "Zeit seit dem letzten Umtopfen"
@@ -186,7 +294,7 @@
           "apply_to_existing": "Auf vorhandene Pflanzen anwenden"
         },
         "data_description": {
-          "enable_all": "Alle Sensortypen standardmäßig aktivieren, auch solche, die in zukünftigen Versionen hinzukommen. Wenn aktiviert, wird die Auswahl unten ignoriert, bleibt aber erhalten.",
+          "enable_all": "Alle Sensortypen standardmäßig aktivieren, auch solche, die in zukünftigen Versionen hinzukommen, und Sensoren, die noch keinen Wert haben. Wenn aktiviert, wird die Auswahl unten ignoriert, bleibt aber erhalten.",
           "apply_to_existing": "Die Sensoren vorhandener Pflanzen ebenfalls entsprechend dieser Auswahl aktivieren oder deaktivieren. Von Ihnen selbst deaktivierte Sensoren bleiben unverändert, von Ihnen selbst aktivierte Sensoren werden jedoch deaktiviert, wenn ihr Typ nicht ausgewählt ist."
         },
         "sections": {
@@ -230,7 +338,9 @@
         "misting": "Besprühen",
         "cleaning": "Reinigung",
         "repotting": "Umtopfen",
-        "progress_update": "Fortschrittsupdate"
+        "progress_update": "Fortschrittsupdate",
+        "pruning": "Rückschnitt",
+        "custom_task": "Eigene Aufgaben"
       }
     },
     "plant_sensor": {

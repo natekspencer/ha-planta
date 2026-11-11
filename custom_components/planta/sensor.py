@@ -5,6 +5,7 @@ from __future__ import annotations
 from collections.abc import Callable
 from dataclasses import dataclass, replace
 from datetime import date, datetime, timedelta
+from functools import partial
 import logging
 from typing import Any
 
@@ -24,7 +25,7 @@ import homeassistant.util.dt as dt_util
 
 from .const import CONF_ENABLE_ALL, CONF_ENABLED_SENSORS
 from .coordinator import PlantaConfigEntry
-from .entity import PlantaEntity
+from .entity import PlantaEntity, get_plant_action, get_plant_tasks, get_task_key
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -63,7 +64,7 @@ def get_last_watering_completed(
 
 def get_plant_action_date(plant: dict[str, Any], action_type: str) -> date | None:
     """Get plant next action date."""
-    action = plant["actions"].get(action_type) or {}
+    action = get_plant_action(plant, action_type) or {}
     if (record := action.get("next")) and (date_str := record.get("date")):
         return dt_util.parse_date(date_str[:10])
     return None
@@ -73,7 +74,7 @@ def get_plant_action_completed(
     plant: dict[str, Any], action_type: str
 ) -> datetime | None:
     """Get plant last completed action timestamp."""
-    action = plant["actions"].get(action_type) or {}
+    action = get_plant_action(plant, action_type) or {}
     if (record := action.get("completed")) and (date_str := record.get("date")):
         return dt_util.parse_datetime(date_str)
     return None
@@ -338,17 +339,84 @@ ACTION_DESCRIPTORS = (
         value_fn=lambda plant: get_last_watering_completed(plant, True),
     ),
 )
+ACTION_SENSOR_PREFIXES = ("scheduled_", "last_", "time_since_last_")
+# Pruning techniques and custom tasks share a sensor type (e.g. `scheduled_pruning`)
+TASK_TYPES = ("pruning", "custom_task")
+
+
+def task_descriptions(task: dict[str, Any]) -> list[PlantaSensorEntityDescription]:
+    """Get the sensor descriptions of a pruning or custom task."""
+    if not (task_key := get_task_key(task)):
+        return []
+    action_type: str = task["actionType"]
+    key, translation_key, placeholders = task_key
+    return [
+        PlantaSensorEntityDescription(
+            key=f"scheduled_{key}",
+            field=action_type,
+            translation_key=f"scheduled_{translation_key}",
+            translation_placeholders=placeholders,
+            device_class=SensorDeviceClass.DATE,
+            value_fn=partial(get_plant_action_date, action_type=action_type),
+        ),
+        PlantaSensorEntityDescription(
+            key=f"last_{key}",
+            field=action_type,
+            translation_key=f"last_{translation_key}",
+            translation_placeholders=placeholders,
+            entity_registry_enabled_default=False,
+            device_class=SensorDeviceClass.TIMESTAMP,
+            entity_category=EntityCategory.DIAGNOSTIC,
+            value_fn=partial(get_plant_action_completed, action_type=action_type),
+        ),
+        PlantaSensorEntityDescription(
+            key=f"time_since_last_{key}",
+            field=action_type,
+            translation_key=f"time_since_last_{translation_key}",
+            translation_placeholders=placeholders,
+            device_class=SensorDeviceClass.DURATION,
+            entity_category=EntityCategory.DIAGNOSTIC,
+            entity_registry_enabled_default=False,
+            native_unit_of_measurement=UnitOfTime.SECONDS,
+            suggested_unit_of_measurement=UnitOfTime.DAYS,
+            state_class=SensorStateClass.MEASUREMENT,
+            value_fn=partial(time_since_last_completed, action_type=action_type),
+        ),
+    ]
+
+
 PLANT_SENSOR_KEYS = [description.key for description in PLANT_DESCRIPTORS]
 CARE_ACTIONS = [
-    description.key.removeprefix("scheduled_")
-    for description in ACTION_DESCRIPTORS
-    if description.key.startswith("scheduled_")
+    *(
+        description.key.removeprefix("scheduled_")
+        for description in ACTION_DESCRIPTORS
+        if description.key.startswith("scheduled_")
+    ),
+    *TASK_TYPES,
 ]
 DEFAULT_ENABLED_SENSORS = [
-    description.key
-    for description in PLANT_DESCRIPTORS + ACTION_DESCRIPTORS
-    if description.entity_registry_enabled_default
+    *(
+        description.key
+        for description in PLANT_DESCRIPTORS + ACTION_DESCRIPTORS
+        if description.entity_registry_enabled_default
+    ),
+    *(f"scheduled_{task_type}" for task_type in TASK_TYPES),
 ]
+
+
+def get_sensor_type(key: str) -> str:
+    """Get the sensor type of a sensor key, as selected in the options.
+
+    Pruning technique and custom task sensors map to their shared type, e.g.
+    `scheduled_pruning_topping` to `scheduled_pruning`.
+    """
+    for prefix in ACTION_SENSOR_PREFIXES:
+        if key.startswith(prefix):
+            action = key.removeprefix(prefix)
+            for task_type in TASK_TYPES:
+                if action.startswith(f"{task_type}_"):
+                    return f"{prefix}{task_type}"
+    return key
 
 
 def get_enabled_sensors(entry: PlantaConfigEntry) -> set[str]:
@@ -358,9 +426,9 @@ def get_enabled_sensors(entry: PlantaConfigEntry) -> set[str]:
 
 def is_sensor_enabled(entry: PlantaConfigEntry, key: str) -> bool:
     """Return if a sensor type should be enabled by default for new plants."""
-    return entry.options.get(CONF_ENABLE_ALL, False) or key in get_enabled_sensors(
-        entry
-    )
+    return entry.options.get(CONF_ENABLE_ALL, False) or get_sensor_type(
+        key
+    ) in get_enabled_sensors(entry)
 
 
 async def async_setup_entry(
@@ -371,6 +439,7 @@ async def async_setup_entry(
     """Set up Planta sensors using config entry."""
     coordinator = entry.runtime_data
     known_plants: set[str] = set()
+    known_tasks: set[tuple[str, str]] = set()
     plant_descriptors = [
         replace(d, entity_registry_enabled_default=is_sensor_enabled(entry, d.key))
         for d in PLANT_DESCRIPTORS
@@ -395,6 +464,28 @@ async def async_setup_entry(
                 for description in action_descriptors
                 if coordinator.data[plant_id]["actions"][description.field]["next"]
             )
+        # Pruning and custom tasks come and go, so check every plant on each update
+        for plant_id, plant in coordinator.data.items():
+            for task in get_plant_tasks(plant):
+                if (plant_id, task["actionType"]) in known_tasks or not task.get(
+                    "next"
+                ):
+                    continue
+                known_tasks.add((plant_id, task["actionType"]))
+                entities.extend(
+                    PlantaSensorEntity(
+                        coordinator,
+                        replace(
+                            description,
+                            entity_registry_enabled_default=is_sensor_enabled(
+                                entry, description.key
+                            ),
+                        ),
+                        plant_id,
+                    )
+                    for description in task_descriptions(task)
+                )
+        if entities:
             async_add_entities(entities)
 
     _check_plants()
@@ -408,10 +499,13 @@ class PlantaSensorEntity(PlantaEntity, SensorEntity):
 
     @property
     def entity_registry_enabled_default(self) -> bool:
-        """Return if the entity should be enabled when first added to the entity registry."""
-        return (
-            self.entity_description.entity_registry_enabled_default
-            and self.native_value is not None
+        """Return if the entity should be enabled when first added to the entity registry.
+
+        Sensors without a value start disabled, unless all sensors are enabled.
+        """
+        return self.entity_description.entity_registry_enabled_default and (
+            self.coordinator.config_entry.options.get(CONF_ENABLE_ALL, False)
+            or self.native_value is not None
         )
 
     @property

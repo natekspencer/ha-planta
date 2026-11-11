@@ -64,7 +64,7 @@ Alternatively:
 
 ## 🪴 Entities
 
-Each plant is added as a device with the following entities. Entities marked ❌ are still created, but start disabled so they don't record any history. You can enable them individually per plant. Entities without a value when the plant is added also start disabled.
+Each plant is added as a device with the following entities. Entities marked ❌ are still created, but start disabled so they don't record any history. You can enable them individually per plant. Entities without a value when they are added also start disabled, unless **Enable all** is on (see Options below).
 
 ### Plant sensors
 
@@ -89,8 +89,12 @@ Care sensors are only created for actions that are scheduled for the plant.
 | Cleaning        |        ✅        |        ❌        |             ❌             |
 | Repotting       |        ✅        |        ❌        |             ❌             |
 | Progress update |        ❌        |        ❌        |             ❌             |
+| Pruning         |        ✅        |        ❌        |             ❌             |
+| Custom tasks    |        ✅        |        ❌        |             ❌             |
 
 Last watering also counts liquid fertilizing.
+
+Pruning sensors are created per technique the plant has scheduled (e.g. **Scheduled pruning (deadheading)**), and custom task sensors per custom task (e.g. **Scheduled Rotate pot**). They're added as soon as Planta schedules them and become unavailable when they're removed in Planta. In the options, a single **Pruning** or **Custom tasks** selection covers all of them.
 
 ### Other entities
 
@@ -98,12 +102,13 @@ Last watering also counts liquid fertilizing.
 | ------------------------------------------------------------- | --------------------------------------- | ------------------------------- |
 | Image                                                         | Plant photo                             | ✅                              |
 | Complete watering / fertilizing / misting / cleaning (button) | Marks the action as completed in Planta | ✅ when the action is scheduled |
+| Complete pruning / custom task (button)                       | Marks the task as completed in Planta   | ✅ when the task is scheduled   |
 | Today's tasks (to-do list)                                    | Care tasks due today, across all plants | ✅                              |
 | Upcoming tasks (to-do list)                                   | Upcoming care tasks, across all plants  | ✅                              |
 
 ## ⚙️ Options
 
-To change which sensors are enabled by default, go to the Planta integration and select **Configure**. Changes apply to plants added afterwards. Turn on **Enable all** to enable every sensor type, including types added in future versions. Select **Apply to existing plants** to also enable or disable the sensors of existing plants to match. Sensors you disabled yourself are left alone, but sensors you enabled yourself are disabled if their type isn't selected.
+To change which sensors are enabled by default, go to the Planta integration and select **Configure**. Changes apply to plants added afterwards. Turn on **Enable all** to enable every sensor type, including types added in future versions and sensors that don't have a value yet (such as the last pruning of a technique that was never completed). Select **Apply to existing plants** to also enable or disable the sensors of existing plants to match. Sensors you disabled yourself are left alone, but sensors you enabled yourself are disabled if their type isn't selected.
 
 ---
 

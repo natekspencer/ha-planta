@@ -16,6 +16,9 @@ from homeassistant.helpers import entity_registry as er
 from . import MockConfigEntry
 from .conftest import make_plant
 
+# Sensor types of pruning and custom tasks, which the test plants don't have
+TASK_SENSOR_TYPES = {"scheduled_pruning", "scheduled_custom_task"}
+
 ALL_SENSOR_KEYS = {
     "health",
     "size",
@@ -74,7 +77,9 @@ async def test_default_enabled_sensors(
         "scheduled_watering",
         "last_watering",
     }
-    assert set(DEFAULT_ENABLED_SENSORS) == enabled_keys(entity_registry, "plant1")
+    assert set(DEFAULT_ENABLED_SENSORS) - TASK_SENSOR_TYPES == enabled_keys(
+        entity_registry, "plant1"
+    )
     assert (
         sensor_entry(entity_registry, "plant1", "health").disabled_by
         is er.RegistryEntryDisabler.INTEGRATION
@@ -118,7 +123,7 @@ async def test_enable_all(
     [
         (
             [make_plant("plant1", health=None, site={"name": None})],
-            {CONF_ENABLE_ALL: True},
+            {CONF_ENABLED_SENSORS: sorted(ALL_SENSOR_KEYS)},
         )
     ],
 )
@@ -134,6 +139,26 @@ async def test_sensors_without_value_disabled(
         "health",
         "site",
     }
+
+
+@pytest.mark.parametrize(
+    ("plants", "options"),
+    [
+        (
+            [make_plant("plant1", health=None, site={"name": None})],
+            {CONF_ENABLE_ALL: True},
+        )
+    ],
+)
+async def test_enable_all_sensors_without_value(
+    hass: HomeAssistant,
+    entity_registry: er.EntityRegistry,
+    setup_integration: Callable[[], Any],
+) -> None:
+    """Test enable all also enables sensors without a value."""
+    await setup_integration()
+
+    assert enabled_keys(entity_registry, "plant1") == ALL_SENSOR_KEYS
 
 
 async def test_unscheduled_action_sensors_not_created(
@@ -176,9 +201,9 @@ async def test_option_change_applies_to_new_plants_only(
     await hass.async_block_till_done()
 
     # Existing plant keeps its sensors as they were, including the manual choice
-    assert enabled_keys(entity_registry, "plant1") == set(DEFAULT_ENABLED_SENSORS) | {
-        "health"
-    }
+    assert enabled_keys(entity_registry, "plant1") == (
+        set(DEFAULT_ENABLED_SENSORS) - TASK_SENSOR_TYPES
+    ) | {"health"}
 
     # A plant added afterwards follows the new options
     plants.append(make_plant("plant2"))

@@ -1,0 +1,2694 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "version": "1.0.0",
+    "title": "Planta's Public APIs",
+    "description": "APIs for a user's plants and support for completing actions"
+  },
+  "servers": [
+    {
+      "url": "https://public.planta-api.com"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "BearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {},
+    "parameters": {}
+  },
+  "paths": {
+    "/v1/auth/authorize": {
+      "post": {
+        "description": "Exchange OTP for a token and refresh token.",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "minLength": 6
+                  }
+                },
+                "required": [
+                  "code"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token and refresh token used for API calls.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "tokenType": {
+                          "type": "string",
+                          "enum": [
+                            "Bearer"
+                          ]
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "accessToken",
+                        "refreshToken",
+                        "tokenType",
+                        "expiresAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "validation_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid body"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "unauthorized"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "You are not authorized to make this request"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Request body is not sent as application/json",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 415
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "unknown"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unsupported Media Type"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Api error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "internal_server_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Something unexpected happened."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/auth/refreshToken": {
+      "post": {
+        "description": "Exchange OTP for a token and refresh token.",
+        "tags": [
+          "Auth"
+        ],
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "refreshToken": {
+                    "type": "string",
+                    "minLength": 0
+                  }
+                },
+                "required": [
+                  "refreshToken"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Token and refresh token used for API calls.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "accessToken": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "refreshToken": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "tokenType": {
+                          "type": "string",
+                          "enum": [
+                            "Bearer"
+                          ]
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      },
+                      "required": [
+                        "accessToken",
+                        "refreshToken",
+                        "tokenType",
+                        "expiresAt"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "validation_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid body"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "unauthorized"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "You are not authorized to make this request"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Request body is not sent as application/json",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 415
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "unknown"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unsupported Media Type"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Api error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "internal_server_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Something unexpected happened."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/addedPlants": {
+      "get": {
+        "description": "Returns information about added plants. The API is paginated and returns up to 50 plants per call.",
+        "tags": [
+          "Added Plants"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": [
+                "string",
+                "null"
+              ],
+              "description": "Pagination cursor",
+              "example": null
+            },
+            "required": false,
+            "description": "Pagination cursor",
+            "name": "cursor",
+            "in": "query"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns plant information.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "names": {
+                            "type": "object",
+                            "properties": {
+                              "localizedName": {
+                                "type": "string"
+                              },
+                              "variety": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "default": null
+                              },
+                              "tradeDesignation": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "default": null
+                              },
+                              "descriptive": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "default": null
+                              },
+                              "custom": {
+                                "type": [
+                                  "string",
+                                  "null"
+                                ],
+                                "default": null
+                              },
+                              "scientific": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "localizedName",
+                              "scientific"
+                            ]
+                          },
+                          "site": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "hasGrowLight": {
+                                "type": [
+                                  "boolean",
+                                  "null"
+                                ],
+                                "default": null
+                              },
+                              "activeGrowLightHours": {
+                                "type": [
+                                  "number",
+                                  "null"
+                                ],
+                                "default": null
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "name"
+                            ]
+                          },
+                          "image": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "type": "string"
+                              },
+                              "lastUpdated": {
+                                "type": "string",
+                                "format": "date-time"
+                              }
+                            },
+                            "required": [
+                              "url",
+                              "lastUpdated"
+                            ]
+                          },
+                          "plantCare": {
+                            "type": "object",
+                            "properties": {
+                              "customWatering": {
+                                "type": "object",
+                                "properties": {
+                                  "enabled": {
+                                    "type": "boolean"
+                                  },
+                                  "intervalWarmPeriod": {
+                                    "type": "number"
+                                  },
+                                  "intervalColdPeriod": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "enabled",
+                                  "intervalWarmPeriod",
+                                  "intervalColdPeriod"
+                                ]
+                              },
+                              "customFertilizing": {
+                                "type": "object",
+                                "properties": {
+                                  "enabled": {
+                                    "type": "boolean"
+                                  },
+                                  "intervalWarmPeriod": {
+                                    "type": "number"
+                                  },
+                                  "intervalColdPeriod": {
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "enabled",
+                                  "intervalWarmPeriod",
+                                  "intervalColdPeriod"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "customWatering",
+                              "customFertilizing"
+                            ]
+                          },
+                          "size": {
+                            "type": [
+                              "number",
+                              "null"
+                            ],
+                            "default": null
+                          },
+                          "health": {
+                            "type": [
+                              "string",
+                              "null"
+                            ],
+                            "enum": [
+                              "poor",
+                              "fair",
+                              "sick",
+                              "good",
+                              "bad",
+                              "veryGood",
+                              "excellent",
+                              null
+                            ],
+                            "default": null
+                          },
+                          "environment": {
+                            "type": "object",
+                            "properties": {
+                              "isNearAc": {
+                                "type": [
+                                  "boolean",
+                                  "null"
+                                ],
+                                "default": null
+                              },
+                              "isNearHeater": {
+                                "type": [
+                                  "boolean",
+                                  "null"
+                                ],
+                                "default": null
+                              },
+                              "light": {
+                                "type": "object",
+                                "properties": {
+                                  "distanceFromWindow": {
+                                    "type": [
+                                      "number",
+                                      "null"
+                                    ],
+                                    "default": null
+                                  },
+                                  "hasGrowLight": {
+                                    "type": [
+                                      "boolean",
+                                      "null"
+                                    ],
+                                    "default": null
+                                  },
+                                  "activeGrowLightHours": {
+                                    "type": [
+                                      "number",
+                                      "null"
+                                    ],
+                                    "default": null
+                                  }
+                                }
+                              },
+                              "pot": {
+                                "type": "object",
+                                "properties": {
+                                  "type": {
+                                    "type": "string",
+                                    "enum": [
+                                      "potOriginalPlastic",
+                                      "potPlastic",
+                                      "potTerracotta",
+                                      "potGlass",
+                                      "potPorcelain",
+                                      "windowBox",
+                                      "potMetallic",
+                                      "potWood",
+                                      "potPeat",
+                                      "potConcrete",
+                                      "potFabric",
+                                      "potRectangular",
+                                      "ground",
+                                      "potShallow",
+                                      "other",
+                                      "none"
+                                    ]
+                                  },
+                                  "size": {
+                                    "type": [
+                                      "number",
+                                      "null"
+                                    ],
+                                    "default": null
+                                  },
+                                  "soil": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "enum": [
+                                      "allPurposePottingMix",
+                                      "allPurposeGardenSoil",
+                                      "cactusPalmCitrusSoil",
+                                      "orchidPottingMix",
+                                      "acidicSoil",
+                                      "roseSoil",
+                                      "vegetableHerbSoil",
+                                      "seedStartingMix",
+                                      "treeShrubPlantingMix",
+                                      "carnivoresPlantMix",
+                                      "cactusSoil",
+                                      "tropicalSoil",
+                                      "epiphyticSoil",
+                                      "pottingSoilAndDrainage",
+                                      "sphagnumMoss",
+                                      "coconutCoirOrPeat",
+                                      "bonsaiSoil",
+                                      "semiHydro",
+                                      "water",
+                                      "other",
+                                      "none",
+                                      null
+                                    ],
+                                    "default": null
+                                  },
+                                  "hasDrainage": {
+                                    "type": [
+                                      "boolean",
+                                      "null"
+                                    ],
+                                    "default": null
+                                  }
+                                },
+                                "required": [
+                                  "type"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "light",
+                              "pot"
+                            ]
+                          },
+                          "actions": {
+                            "type": "object",
+                            "properties": {
+                              "watering": {
+                                "type": "object",
+                                "properties": {
+                                  "next": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  },
+                                  "completed": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  }
+                                }
+                              },
+                              "fertilizing": {
+                                "type": "object",
+                                "properties": {
+                                  "next": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      },
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "liquid",
+                                          "fertilizerSticks",
+                                          "allPurposeGranular",
+                                          "slowReleaseGranular",
+                                          "acidicSoilGranular",
+                                          "cowManure",
+                                          "chickenManure",
+                                          "leafCompost",
+                                          "richCompost",
+                                          "boneMeal"
+                                        ]
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date",
+                                      "type"
+                                    ]
+                                  },
+                                  "completed": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      },
+                                      "type": {
+                                        "type": "string",
+                                        "enum": [
+                                          "liquid",
+                                          "fertilizerSticks",
+                                          "allPurposeGranular",
+                                          "slowReleaseGranular",
+                                          "acidicSoilGranular",
+                                          "cowManure",
+                                          "chickenManure",
+                                          "leafCompost",
+                                          "richCompost",
+                                          "boneMeal"
+                                        ]
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date",
+                                      "type"
+                                    ]
+                                  }
+                                }
+                              },
+                              "repotting": {
+                                "type": "object",
+                                "properties": {
+                                  "next": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  },
+                                  "completed": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  }
+                                }
+                              },
+                              "cleaning": {
+                                "type": "object",
+                                "properties": {
+                                  "next": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  },
+                                  "completed": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  }
+                                }
+                              },
+                              "progressUpdate": {
+                                "type": "object",
+                                "properties": {
+                                  "next": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  },
+                                  "completed": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  }
+                                }
+                              },
+                              "misting": {
+                                "type": "object",
+                                "properties": {
+                                  "next": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  },
+                                  "completed": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  }
+                                }
+                              },
+                              "customTasks": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "actionType": {
+                                      "type": "string"
+                                    },
+                                    "name": {
+                                      "type": "string"
+                                    },
+                                    "icon": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "enum": [
+                                        "watering",
+                                        "household_supplies",
+                                        "fertilizer_bag",
+                                        "fertilizer",
+                                        "recycling",
+                                        "pot",
+                                        "water_drop",
+                                        "grow_light",
+                                        "cleaning",
+                                        "cutting",
+                                        "propagation",
+                                        "pruning",
+                                        "fragrance",
+                                        "pest_control",
+                                        "sanitizer",
+                                        "water_ph",
+                                        "lime_sensitivity",
+                                        "fly",
+                                        "pest",
+                                        "caterpillar",
+                                        "light_full",
+                                        "light_partial",
+                                        "light_low",
+                                        "light_shade",
+                                        "light_grow",
+                                        "winterizing",
+                                        "draft",
+                                        "outdoor_temp",
+                                        "indoor_temp",
+                                        "heater",
+                                        "humidity",
+                                        "seeds",
+                                        "young_vegetative",
+                                        "root",
+                                        "flower",
+                                        "flower_alt",
+                                        "pruning_branch",
+                                        "roots",
+                                        "plant_type",
+                                        "plant",
+                                        "gift",
+                                        "toxicity",
+                                        "checkmark",
+                                        "cross",
+                                        "eye",
+                                        "search",
+                                        "scientific_name",
+                                        "news",
+                                        "date",
+                                        "size",
+                                        "edible",
+                                        "notifications",
+                                        "time",
+                                        "pet",
+                                        "star",
+                                        "lawn_mower",
+                                        "rake",
+                                        "garden_cart",
+                                        "sprinkler",
+                                        "soil_type",
+                                        "difficulty",
+                                        "diagnoses",
+                                        "shovel",
+                                        "trowel",
+                                        "gardening_tools",
+                                        "emoji_nature",
+                                        "pruning_cut",
+                                        "compost",
+                                        null
+                                      ],
+                                      "default": null
+                                    },
+                                    "iconUrl": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "default": null
+                                    },
+                                    "backgroundColor": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "default": null
+                                    },
+                                    "foregroundColor": {
+                                      "type": [
+                                        "string",
+                                        "null"
+                                      ],
+                                      "default": null
+                                    },
+                                    "next": {
+                                      "type": [
+                                        "object",
+                                        "null"
+                                      ],
+                                      "properties": {
+                                        "date": {
+                                          "type": "string",
+                                          "format": "date-time"
+                                        }
+                                      },
+                                      "default": null,
+                                      "required": [
+                                        "date"
+                                      ]
+                                    },
+                                    "completed": {
+                                      "type": [
+                                        "object",
+                                        "null"
+                                      ],
+                                      "properties": {
+                                        "date": {
+                                          "type": "string",
+                                          "format": "date-time"
+                                        }
+                                      },
+                                      "default": null,
+                                      "required": [
+                                        "date"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "actionType",
+                                    "name"
+                                  ]
+                                }
+                              },
+                              "pruning": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "actionType": {
+                                      "type": "string",
+                                      "enum": [
+                                        "pruning:deadHeadingPinching",
+                                        "pruning:deadWooding",
+                                        "pruning:cutBackOneThird",
+                                        "pruning:removeSuckersPinching",
+                                        "pruning:removeFlowersPinching",
+                                        "pruning:lollipopping",
+                                        "pruning:topping",
+                                        "pruning:thinning"
+                                      ]
+                                    },
+                                    "technique": {
+                                      "type": "string",
+                                      "enum": [
+                                        "deadHeadingPinching",
+                                        "deadWooding",
+                                        "cutBackOneThird",
+                                        "removeSuckersPinching",
+                                        "removeFlowersPinching",
+                                        "lollipopping",
+                                        "topping",
+                                        "thinning"
+                                      ]
+                                    },
+                                    "next": {
+                                      "type": [
+                                        "object",
+                                        "null"
+                                      ],
+                                      "properties": {
+                                        "date": {
+                                          "type": "string",
+                                          "format": "date-time"
+                                        }
+                                      },
+                                      "default": null,
+                                      "required": [
+                                        "date"
+                                      ]
+                                    },
+                                    "completed": {
+                                      "type": [
+                                        "object",
+                                        "null"
+                                      ],
+                                      "properties": {
+                                        "date": {
+                                          "type": "string",
+                                          "format": "date-time"
+                                        }
+                                      },
+                                      "default": null,
+                                      "required": [
+                                        "date"
+                                      ]
+                                    }
+                                  },
+                                  "required": [
+                                    "actionType",
+                                    "technique"
+                                  ]
+                                }
+                              }
+                            },
+                            "required": [
+                              "watering",
+                              "fertilizing",
+                              "repotting",
+                              "cleaning",
+                              "progressUpdate",
+                              "misting",
+                              "customTasks",
+                              "pruning"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "names",
+                          "site",
+                          "image",
+                          "plantCare",
+                          "environment",
+                          "actions"
+                        ]
+                      }
+                    },
+                    "pagination": {
+                      "type": "object",
+                      "properties": {
+                        "nextPage": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "nextPage"
+                      ],
+                      "description": "Pagination response",
+                      "example": {
+                        "nextPage": "8Acyb9VZTdGUJALpTbekjA"
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "data",
+                    "pagination"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "validation_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid body"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "unauthorized"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "You are not authorized to make this request"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Api error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "internal_server_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Something unexpected happened."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/addedPlants/{id}": {
+      "get": {
+        "description": "Get information about the added plant.",
+        "tags": [
+          "Added Plants"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Returns plant information about a specific added plant.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 200
+                    },
+                    "data": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "names": {
+                          "type": "object",
+                          "properties": {
+                            "localizedName": {
+                              "type": "string"
+                            },
+                            "variety": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "default": null
+                            },
+                            "tradeDesignation": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "default": null
+                            },
+                            "descriptive": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "default": null
+                            },
+                            "custom": {
+                              "type": [
+                                "string",
+                                "null"
+                              ],
+                              "default": null
+                            },
+                            "scientific": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "localizedName",
+                            "scientific"
+                          ]
+                        },
+                        "site": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "hasGrowLight": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ],
+                              "default": null
+                            },
+                            "activeGrowLightHours": {
+                              "type": [
+                                "number",
+                                "null"
+                              ],
+                              "default": null
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name"
+                          ]
+                        },
+                        "image": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "type": "string"
+                            },
+                            "lastUpdated": {
+                              "type": "string",
+                              "format": "date-time"
+                            }
+                          },
+                          "required": [
+                            "url",
+                            "lastUpdated"
+                          ]
+                        },
+                        "plantCare": {
+                          "type": "object",
+                          "properties": {
+                            "customWatering": {
+                              "type": "object",
+                              "properties": {
+                                "enabled": {
+                                  "type": "boolean"
+                                },
+                                "intervalWarmPeriod": {
+                                  "type": "number"
+                                },
+                                "intervalColdPeriod": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "enabled",
+                                "intervalWarmPeriod",
+                                "intervalColdPeriod"
+                              ]
+                            },
+                            "customFertilizing": {
+                              "type": "object",
+                              "properties": {
+                                "enabled": {
+                                  "type": "boolean"
+                                },
+                                "intervalWarmPeriod": {
+                                  "type": "number"
+                                },
+                                "intervalColdPeriod": {
+                                  "type": "number"
+                                }
+                              },
+                              "required": [
+                                "enabled",
+                                "intervalWarmPeriod",
+                                "intervalColdPeriod"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "customWatering",
+                            "customFertilizing"
+                          ]
+                        },
+                        "size": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "default": null
+                        },
+                        "health": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "enum": [
+                            "poor",
+                            "fair",
+                            "sick",
+                            "good",
+                            "bad",
+                            "veryGood",
+                            "excellent",
+                            null
+                          ],
+                          "default": null
+                        },
+                        "environment": {
+                          "type": "object",
+                          "properties": {
+                            "isNearAc": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ],
+                              "default": null
+                            },
+                            "isNearHeater": {
+                              "type": [
+                                "boolean",
+                                "null"
+                              ],
+                              "default": null
+                            },
+                            "light": {
+                              "type": "object",
+                              "properties": {
+                                "distanceFromWindow": {
+                                  "type": [
+                                    "number",
+                                    "null"
+                                  ],
+                                  "default": null
+                                },
+                                "hasGrowLight": {
+                                  "type": [
+                                    "boolean",
+                                    "null"
+                                  ],
+                                  "default": null
+                                },
+                                "activeGrowLightHours": {
+                                  "type": [
+                                    "number",
+                                    "null"
+                                  ],
+                                  "default": null
+                                }
+                              }
+                            },
+                            "pot": {
+                              "type": "object",
+                              "properties": {
+                                "type": {
+                                  "type": "string",
+                                  "enum": [
+                                    "potOriginalPlastic",
+                                    "potPlastic",
+                                    "potTerracotta",
+                                    "potGlass",
+                                    "potPorcelain",
+                                    "windowBox",
+                                    "potMetallic",
+                                    "potWood",
+                                    "potPeat",
+                                    "potConcrete",
+                                    "potFabric",
+                                    "potRectangular",
+                                    "ground",
+                                    "potShallow",
+                                    "other",
+                                    "none"
+                                  ]
+                                },
+                                "size": {
+                                  "type": [
+                                    "number",
+                                    "null"
+                                  ],
+                                  "default": null
+                                },
+                                "soil": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ],
+                                  "enum": [
+                                    "allPurposePottingMix",
+                                    "allPurposeGardenSoil",
+                                    "cactusPalmCitrusSoil",
+                                    "orchidPottingMix",
+                                    "acidicSoil",
+                                    "roseSoil",
+                                    "vegetableHerbSoil",
+                                    "seedStartingMix",
+                                    "treeShrubPlantingMix",
+                                    "carnivoresPlantMix",
+                                    "cactusSoil",
+                                    "tropicalSoil",
+                                    "epiphyticSoil",
+                                    "pottingSoilAndDrainage",
+                                    "sphagnumMoss",
+                                    "coconutCoirOrPeat",
+                                    "bonsaiSoil",
+                                    "semiHydro",
+                                    "water",
+                                    "other",
+                                    "none",
+                                    null
+                                  ],
+                                  "default": null
+                                },
+                                "hasDrainage": {
+                                  "type": [
+                                    "boolean",
+                                    "null"
+                                  ],
+                                  "default": null
+                                }
+                              },
+                              "required": [
+                                "type"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "light",
+                            "pot"
+                          ]
+                        },
+                        "actions": {
+                          "type": "object",
+                          "properties": {
+                            "watering": {
+                              "type": "object",
+                              "properties": {
+                                "next": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date"
+                                  ]
+                                },
+                                "completed": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date"
+                                  ]
+                                }
+                              }
+                            },
+                            "fertilizing": {
+                              "type": "object",
+                              "properties": {
+                                "next": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "liquid",
+                                        "fertilizerSticks",
+                                        "allPurposeGranular",
+                                        "slowReleaseGranular",
+                                        "acidicSoilGranular",
+                                        "cowManure",
+                                        "chickenManure",
+                                        "leafCompost",
+                                        "richCompost",
+                                        "boneMeal"
+                                      ]
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date",
+                                    "type"
+                                  ]
+                                },
+                                "completed": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    },
+                                    "type": {
+                                      "type": "string",
+                                      "enum": [
+                                        "liquid",
+                                        "fertilizerSticks",
+                                        "allPurposeGranular",
+                                        "slowReleaseGranular",
+                                        "acidicSoilGranular",
+                                        "cowManure",
+                                        "chickenManure",
+                                        "leafCompost",
+                                        "richCompost",
+                                        "boneMeal"
+                                      ]
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date",
+                                    "type"
+                                  ]
+                                }
+                              }
+                            },
+                            "repotting": {
+                              "type": "object",
+                              "properties": {
+                                "next": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date"
+                                  ]
+                                },
+                                "completed": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date"
+                                  ]
+                                }
+                              }
+                            },
+                            "cleaning": {
+                              "type": "object",
+                              "properties": {
+                                "next": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date"
+                                  ]
+                                },
+                                "completed": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date"
+                                  ]
+                                }
+                              }
+                            },
+                            "progressUpdate": {
+                              "type": "object",
+                              "properties": {
+                                "next": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date"
+                                  ]
+                                },
+                                "completed": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date"
+                                  ]
+                                }
+                              }
+                            },
+                            "misting": {
+                              "type": "object",
+                              "properties": {
+                                "next": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date"
+                                  ]
+                                },
+                                "completed": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "properties": {
+                                    "date": {
+                                      "type": "string",
+                                      "format": "date-time"
+                                    }
+                                  },
+                                  "default": null,
+                                  "required": [
+                                    "date"
+                                  ]
+                                }
+                              }
+                            },
+                            "customTasks": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "actionType": {
+                                    "type": "string"
+                                  },
+                                  "name": {
+                                    "type": "string"
+                                  },
+                                  "icon": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "enum": [
+                                      "watering",
+                                      "household_supplies",
+                                      "fertilizer_bag",
+                                      "fertilizer",
+                                      "recycling",
+                                      "pot",
+                                      "water_drop",
+                                      "grow_light",
+                                      "cleaning",
+                                      "cutting",
+                                      "propagation",
+                                      "pruning",
+                                      "fragrance",
+                                      "pest_control",
+                                      "sanitizer",
+                                      "water_ph",
+                                      "lime_sensitivity",
+                                      "fly",
+                                      "pest",
+                                      "caterpillar",
+                                      "light_full",
+                                      "light_partial",
+                                      "light_low",
+                                      "light_shade",
+                                      "light_grow",
+                                      "winterizing",
+                                      "draft",
+                                      "outdoor_temp",
+                                      "indoor_temp",
+                                      "heater",
+                                      "humidity",
+                                      "seeds",
+                                      "young_vegetative",
+                                      "root",
+                                      "flower",
+                                      "flower_alt",
+                                      "pruning_branch",
+                                      "roots",
+                                      "plant_type",
+                                      "plant",
+                                      "gift",
+                                      "toxicity",
+                                      "checkmark",
+                                      "cross",
+                                      "eye",
+                                      "search",
+                                      "scientific_name",
+                                      "news",
+                                      "date",
+                                      "size",
+                                      "edible",
+                                      "notifications",
+                                      "time",
+                                      "pet",
+                                      "star",
+                                      "lawn_mower",
+                                      "rake",
+                                      "garden_cart",
+                                      "sprinkler",
+                                      "soil_type",
+                                      "difficulty",
+                                      "diagnoses",
+                                      "shovel",
+                                      "trowel",
+                                      "gardening_tools",
+                                      "emoji_nature",
+                                      "pruning_cut",
+                                      "compost",
+                                      null
+                                    ],
+                                    "default": null
+                                  },
+                                  "iconUrl": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "default": null
+                                  },
+                                  "backgroundColor": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "default": null
+                                  },
+                                  "foregroundColor": {
+                                    "type": [
+                                      "string",
+                                      "null"
+                                    ],
+                                    "default": null
+                                  },
+                                  "next": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  },
+                                  "completed": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "actionType",
+                                  "name"
+                                ]
+                              }
+                            },
+                            "pruning": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "actionType": {
+                                    "type": "string",
+                                    "enum": [
+                                      "pruning:deadHeadingPinching",
+                                      "pruning:deadWooding",
+                                      "pruning:cutBackOneThird",
+                                      "pruning:removeSuckersPinching",
+                                      "pruning:removeFlowersPinching",
+                                      "pruning:lollipopping",
+                                      "pruning:topping",
+                                      "pruning:thinning"
+                                    ]
+                                  },
+                                  "technique": {
+                                    "type": "string",
+                                    "enum": [
+                                      "deadHeadingPinching",
+                                      "deadWooding",
+                                      "cutBackOneThird",
+                                      "removeSuckersPinching",
+                                      "removeFlowersPinching",
+                                      "lollipopping",
+                                      "topping",
+                                      "thinning"
+                                    ]
+                                  },
+                                  "next": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  },
+                                  "completed": {
+                                    "type": [
+                                      "object",
+                                      "null"
+                                    ],
+                                    "properties": {
+                                      "date": {
+                                        "type": "string",
+                                        "format": "date-time"
+                                      }
+                                    },
+                                    "default": null,
+                                    "required": [
+                                      "date"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "actionType",
+                                  "technique"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "watering",
+                            "fertilizing",
+                            "repotting",
+                            "cleaning",
+                            "progressUpdate",
+                            "misting",
+                            "customTasks",
+                            "pruning"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "names",
+                        "site",
+                        "image",
+                        "plantCare",
+                        "environment",
+                        "actions"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "data"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "validation_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid body"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "unauthorized"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "You are not authorized to make this request"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "not_found"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Added plant not found."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Api error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "internal_server_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Something unexpected happened."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/addedPlants/{id}/actions/complete": {
+      "post": {
+        "description": "Completes an action of the specified action type.",
+        "tags": [
+          "Actions"
+        ],
+        "security": [
+          {
+            "BearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "schema": {
+              "type": "string",
+              "minLength": 1
+            },
+            "required": true,
+            "name": "id",
+            "in": "path"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "actionType": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "watering",
+                          "fertilizing",
+                          "misting",
+                          "cleaning"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "enum": [
+                          "pruning:deadHeadingPinching",
+                          "pruning:deadWooding",
+                          "pruning:cutBackOneThird",
+                          "pruning:removeSuckersPinching",
+                          "pruning:removeFlowersPinching",
+                          "pruning:lollipopping",
+                          "pruning:topping",
+                          "pruning:thinning"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "pattern": "^customTask:[^:]+$"
+                      }
+                    ],
+                    "example": "watering",
+                    "description": "A recurring action, `pruning:<technique>` for pruning, or `customTask:<id>` for a custom task. Pruning and custom task values are listed on the added plant under `actions.pruning` and `actions.customTasks`."
+                  }
+                },
+                "required": [
+                  "actionType"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "204": {
+            "description": "Completed an action of the specified action type for the given plant id."
+          },
+          "400": {
+            "description": "Bad request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 400
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "validation_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid body"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 401
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "unauthorized"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "You are not authorized to make this request"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 404
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "not_found"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Resource not found."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Request body is not sent as application/json",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 415
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "unknown"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Unsupported Media Type"
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Api error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "number",
+                      "example": 500
+                    },
+                    "errorType": {
+                      "type": "string",
+                      "enum": [
+                        "validation_error",
+                        "unauthorized",
+                        "not_found",
+                        "not_premium",
+                        "internal_server_error",
+                        "unknown"
+                      ],
+                      "example": "internal_server_error"
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Something unexpected happened."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "errorType",
+                    "message"
+                  ]
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "webhooks": {}
+}
