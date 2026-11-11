@@ -39,11 +39,38 @@
       "complete_cleaning": {
         "name": "Complete cleaning"
       },
+      "complete_custom_task": {
+        "name": "Complete {task}"
+      },
       "complete_fertilizing": {
         "name": "Complete fertilizing"
       },
       "complete_misting": {
         "name": "Complete misting"
+      },
+      "complete_pruning_cut_back_one_third": {
+        "name": "Complete pruning (cut back by a third)"
+      },
+      "complete_pruning_dead_heading_pinching": {
+        "name": "Complete pruning (deadheading)"
+      },
+      "complete_pruning_dead_wooding": {
+        "name": "Complete pruning (deadwooding)"
+      },
+      "complete_pruning_lollipopping": {
+        "name": "Complete pruning (lollipopping)"
+      },
+      "complete_pruning_remove_flowers_pinching": {
+        "name": "Complete pruning (remove flowers)"
+      },
+      "complete_pruning_remove_suckers_pinching": {
+        "name": "Complete pruning (remove suckers)"
+      },
+      "complete_pruning_thinning": {
+        "name": "Complete pruning (thinning)"
+      },
+      "complete_pruning_topping": {
+        "name": "Complete pruning (topping)"
       },
       "complete_watering": {
         "name": "Complete watering"
@@ -93,6 +120,9 @@
       "last_cleaning": {
         "name": "Last cleaning"
       },
+      "last_custom_task": {
+        "name": "Last {task}"
+      },
       "last_fertilizing": {
         "name": "Last fertilizing"
       },
@@ -101,6 +131,30 @@
       },
       "last_progress_update": {
         "name": "Last progress update"
+      },
+      "last_pruning_cut_back_one_third": {
+        "name": "Last pruning (cut back by a third)"
+      },
+      "last_pruning_dead_heading_pinching": {
+        "name": "Last pruning (deadheading)"
+      },
+      "last_pruning_dead_wooding": {
+        "name": "Last pruning (deadwooding)"
+      },
+      "last_pruning_lollipopping": {
+        "name": "Last pruning (lollipopping)"
+      },
+      "last_pruning_remove_flowers_pinching": {
+        "name": "Last pruning (remove flowers)"
+      },
+      "last_pruning_remove_suckers_pinching": {
+        "name": "Last pruning (remove suckers)"
+      },
+      "last_pruning_thinning": {
+        "name": "Last pruning (thinning)"
+      },
+      "last_pruning_topping": {
+        "name": "Last pruning (topping)"
       },
       "last_repotting": {
         "name": "Last repotting"
@@ -135,6 +189,9 @@
       "scheduled_cleaning": {
         "name": "Scheduled cleaning"
       },
+      "scheduled_custom_task": {
+        "name": "Scheduled {task}"
+      },
       "scheduled_fertilizing": {
         "name": "Scheduled fertilizing"
       },
@@ -143,6 +200,30 @@
       },
       "scheduled_progress_update": {
         "name": "Scheduled progress update"
+      },
+      "scheduled_pruning_cut_back_one_third": {
+        "name": "Scheduled pruning (cut back by a third)"
+      },
+      "scheduled_pruning_dead_heading_pinching": {
+        "name": "Scheduled pruning (deadheading)"
+      },
+      "scheduled_pruning_dead_wooding": {
+        "name": "Scheduled pruning (deadwooding)"
+      },
+      "scheduled_pruning_lollipopping": {
+        "name": "Scheduled pruning (lollipopping)"
+      },
+      "scheduled_pruning_remove_flowers_pinching": {
+        "name": "Scheduled pruning (remove flowers)"
+      },
+      "scheduled_pruning_remove_suckers_pinching": {
+        "name": "Scheduled pruning (remove suckers)"
+      },
+      "scheduled_pruning_thinning": {
+        "name": "Scheduled pruning (thinning)"
+      },
+      "scheduled_pruning_topping": {
+        "name": "Scheduled pruning (topping)"
       },
       "scheduled_repotting": {
         "name": "Scheduled repotting"
@@ -159,6 +240,9 @@
       "time_since_last_cleaning": {
         "name": "Time since last cleaning"
       },
+      "time_since_last_custom_task": {
+        "name": "Time since last {task}"
+      },
       "time_since_last_fertilizing": {
         "name": "Time since last fertilizing"
       },
@@ -167,6 +251,30 @@
       },
       "time_since_last_progress_update": {
         "name": "Time since last progress update"
+      },
+      "time_since_last_pruning_cut_back_one_third": {
+        "name": "Time since last pruning (cut back by a third)"
+      },
+      "time_since_last_pruning_dead_heading_pinching": {
+        "name": "Time since last pruning (deadheading)"
+      },
+      "time_since_last_pruning_dead_wooding": {
+        "name": "Time since last pruning (deadwooding)"
+      },
+      "time_since_last_pruning_lollipopping": {
+        "name": "Time since last pruning (lollipopping)"
+      },
+      "time_since_last_pruning_remove_flowers_pinching": {
+        "name": "Time since last pruning (remove flowers)"
+      },
+      "time_since_last_pruning_remove_suckers_pinching": {
+        "name": "Time since last pruning (remove suckers)"
+      },
+      "time_since_last_pruning_thinning": {
+        "name": "Time since last pruning (thinning)"
+      },
+      "time_since_last_pruning_topping": {
+        "name": "Time since last pruning (topping)"
       },
       "time_since_last_repotting": {
         "name": "Time since last repotting"
@@ -202,7 +310,7 @@
           "apply_to_existing": "Apply to existing plants"
         },
         "data_description": {
-          "enable_all": "Enable every sensor type by default, including types added in future versions. When on, the selections below are ignored but kept.",
+          "enable_all": "Enable every sensor type by default, including types added in future versions and sensors without a value yet. When on, the selections below are ignored but kept.",
           "apply_to_existing": "Also enable or disable the sensors of existing plants to match this selection. Sensors you disabled yourself are left alone, but sensors you enabled yourself are disabled if their type isn't selected."
         },
         "sections": {
@@ -246,7 +354,9 @@
         "misting": "Misting",
         "cleaning": "Cleaning",
         "repotting": "Repotting",
-        "progress_update": "Progress update"
+        "progress_update": "Progress update",
+        "pruning": "Pruning",
+        "custom_task": "Custom tasks"
       }
     },
     "plant_sensor": {

@@ -79,7 +79,15 @@ async def test_form_defaults(
     assert form_defaults(result) == {
         CONF_ENABLE_ALL: False,
         "plant": [],
-        "scheduled": ["cleaning", "fertilizing", "misting", "repotting", "watering"],
+        "scheduled": [
+            "cleaning",
+            "fertilizing",
+            "misting",
+            "repotting",
+            "watering",
+            "pruning",
+            "custom_task",
+        ],
         "last": ["watering"],
         "time_since_last": [],
         CONF_APPLY_TO_EXISTING: False,
