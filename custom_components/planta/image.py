@@ -39,6 +39,8 @@ IMAGE = ImageEntityDescription(key="image", name=None)
 class PlantaImageEntity(PlantaEntity, ImageEntity):
     """Planta image entity."""
 
+    _unrecorded_attributes = frozenset({"common_name"})
+
     def __init__(
         self,
         coordinator: PlantaCoordinator,
@@ -48,6 +50,17 @@ class PlantaImageEntity(PlantaEntity, ImageEntity):
         """Initialize the entity."""
         super().__init__(coordinator, description, plant_id)
         ImageEntity.__init__(self, coordinator.hass)
+
+    @property
+    def extra_state_attributes(self) -> dict[str, str | None]:
+        """Return the extra state attributes."""
+        names = (self.plant or {}).get("names")
+        common_name = names.get("localizedName") if isinstance(names, dict) else None
+        return {
+            "common_name": common_name
+            if isinstance(common_name, str) and common_name.strip()
+            else None
+        }
 
     async def async_added_to_hass(self) -> None:
         self._handle_coordinator_update()
