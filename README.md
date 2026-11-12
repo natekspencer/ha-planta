@@ -106,6 +106,8 @@ Pruning sensors are created per technique the plant has scheduled (e.g. **Schedu
 | Today's tasks (to-do list)                                    | Care tasks due today, across all plants | ✅                              |
 | Upcoming tasks (to-do list)                                   | Upcoming care tasks, across all plants  | ✅                              |
 
+Each plant's image entity exposes its localized common name through the `common_name` state attribute. The attribute updates with the plant data, returns `null` when no valid common name is available, and is excluded from Recorder history.
+
 ## ⚙️ Options
 
 To change which sensors are enabled by default, go to the Planta integration and select **Configure**. Changes apply to plants added afterwards. Turn on **Enable all** to enable every sensor type, including types added in future versions and sensors that don't have a value yet (such as the last pruning of a technique that was never completed). Select **Apply to existing plants** to also enable or disable the sensors of existing plants to match. Sensors you disabled yourself are left alone, but sensors you enabled yourself are disabled if their type isn't selected.
